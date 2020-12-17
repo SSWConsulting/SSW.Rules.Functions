@@ -1,13 +1,22 @@
+open System
 open Farmer
 open Farmer.Builders
+
+let audience = Environment.GetEnvironmentVariable  "AUTH0_AUDIENCE"
+let issuer = Environment.GetEnvironmentVariable  "AUTH0_ISSUER"
+
+let myAppInsights = appInsights {
+    name "sswrules-staging"
+}
 
 // 1. Create a Functions App
 printfn "Creating Functions App"
 let myFunctions = functions {
     name "sswrules-functions"
     service_plan_name "sswrules-serviceplan"
-    setting "audience" "aValue"
-    setting "issuer" "aValue"
+    setting "audience" audience
+    setting "issuer" issuer
+    link_to_app_insights myAppInsights.Name
 }
 
 // 2. Create a cosmos db
@@ -20,7 +29,6 @@ let myCosmosDb = cosmosDb {
     consistency_policy (CosmosDb.BoundedStaleness(500, 1000))
 }
 
-printfn "Creating ARM Template"
 let deployment = arm {
     location Location.AustraliaEast
     add_resource myFunctions
