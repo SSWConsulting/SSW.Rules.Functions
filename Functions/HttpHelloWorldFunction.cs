@@ -21,7 +21,7 @@ namespace SSW.Rules.Functions
             _apiAuthorization = apiAuthorization;
         }
 
-        [FunctionName("HttpHelloWorld")]
+        [FunctionName("HttpHelloWorldFunction")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
