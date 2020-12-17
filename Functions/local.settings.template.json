@@ -5,7 +5,11 @@
         "FUNCTIONS_WORKER_RUNTIME": "dotnet",
 
         "OidcApiAuthorizationSettings:IssuerUrl": "",
-        "OidcApiAuthorizationSettings:Audience": ""
+        "OidcApiAuthorizationSettings:Audience": "",
+
+        "CosmosDb:Account": "",
+        "CosmosDb:Key": "",
+        "CosmosDb:DatabaseName": ""
     },
     "Host": {
       "LocalHttpPort": 7071,

@@ -5,28 +5,26 @@ open Farmer.Builders
 let audience = Environment.GetEnvironmentVariable  "AUTH0_AUDIENCE"
 let issuer = Environment.GetEnvironmentVariable  "AUTH0_ISSUER"
 
-let myAppInsights = appInsights {
-    name "sswrules-staging"
-}
-
-// 1. Create a Functions App
-printfn "Creating Functions App"
-let myFunctions = functions {
-    name "sswrules-functions"
-    service_plan_name "sswrules-serviceplan"
-    setting "audience" audience
-    setting "issuer" issuer
-    link_to_app_insights myAppInsights.Name
-}
-
-// 2. Create a cosmos db
+// 1. Create a cosmos db
 printfn "Creating CosmosDb"
 let myCosmosDb = cosmosDb {
-    name "sswrules-cosmosdb"
-    account_name "sswrulescosmosdb"
+    name "sswrules-cosmosdb-staging"
+    account_name "sswrulescosmosdb-staging"
     throughput 400<CosmosDb.RU>
     failover_policy CosmosDb.NoFailover
-    consistency_policy (CosmosDb.BoundedStaleness(500, 1000))
+    consistency_policy (CosmosDb.Session)
+}
+
+// 2. Create a Functions App
+printfn "Creating Functions App"
+let myFunctions = functions {
+    name "sswrules-functions-staging"
+    zip_deploy "myFunctionsFolder"
+    setting "OidcApiAuthorizationSettings:Audience" audience
+    setting "OidcApiAuthorizationSettings:IssuerUrl" issuer
+    setting "CosmosDb:Account" myCosmosDb.Endpoint
+    setting "CosmosDb:Key" myCosmosDb.PrimaryKey
+    setting "CosmosDb:DatabaseName" myCosmosDb.DbName
 }
 
 let deployment = arm {
