@@ -9,16 +9,21 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OidcApiAuthorization.Abstractions;
 using OidcApiAuthorization.Models;
+using System.Linq;
 
 namespace SSW.Rules.Functions
 {
     public class HealthCheckFunction
     {
         private readonly IApiAuthorization _apiAuthorization;
+        private readonly RulesDbContext _dbContext;
 
-        public HealthCheckFunction(IApiAuthorization apiAuthorization)
+        public HealthCheckFunction(
+            IApiAuthorization apiAuthorization,
+            RulesDbContext dbContext)
         {
             _apiAuthorization = apiAuthorization;
+            _dbContext = dbContext;
         }
 
         [FunctionName("HealthCheckFunction")]
@@ -29,8 +34,15 @@ namespace SSW.Rules.Functions
             log.LogWarning($"HTTP trigger function {nameof(HealthCheckFunction)} received a request.");
 
             HealthCheckResult result = await _apiAuthorization.HealthCheckAsync();
+            var entity = await _dbContext.LikeDislikes.Add(new LikeDislike {
+                Id = Guid.NewGuid().ToString(),
+				Type = ReactionType.Like,
+                RuleGuid = "qwert123456",
+                UserId = "user123456",
+                Discriminator = typeof(LikeDislike).FullName
+			});
 
-            if (result.IsHealthy)
+            if (result.IsHealthy && entity != null)
             {
                 log.LogWarning($"{nameof(HealthCheckFunction)} health check OK.");
             }
