@@ -77,7 +77,7 @@ jobs:
 
   deploy:
     needs: [build, validate-resources]
-    if: ${{ github.ref == 'ref/head/main' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
 
     steps:
