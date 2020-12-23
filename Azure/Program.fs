@@ -9,8 +9,6 @@ let mutable namePrefix = Environment.GetEnvironmentVariable "AZURE_RG_PREFIX"
 if isNull namePrefix then
     namePrefix <- "sswrules-local"
 
-printfn "name prefix: %s" namePrefix
-
 // 1. Create a cosmos db
 printfn "Creating CosmosDb"
 let myCosmosDb = cosmosDb {
@@ -44,7 +42,7 @@ deployment
 
 printfn "All done! The template has been saved to arm-template.json"
 
-// let json =
-//     deployment.Template
-//     |> Writer.toJson
-// printfn "%s" json
+let json =
+    deployment.Template
+    |> Writer.toJson
+printfn "%s" json
