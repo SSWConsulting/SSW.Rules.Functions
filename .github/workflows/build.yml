@@ -41,6 +41,7 @@ jobs:
 
   validate-resources:
     runs-on: ubuntu-latest
+    environment: staging
 
     steps:
     - uses: actions/checkout@v2
@@ -55,6 +56,7 @@ jobs:
       env:
           AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
           AUTH0_ISSUER: ${{ secrets.AUTH0_ISSUER }}
+          AZURE_RG_PREFIX: ${{ secrets.AZURE_RG_PREFIX }}
 
     - name: Login with Azure CLI
       uses: azure/login@v1
