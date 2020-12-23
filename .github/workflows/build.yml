@@ -80,6 +80,7 @@ jobs:
   deploy:
     needs: [build, validate-resources]
     if: ${{ github.ref == 'refs/heads/main' }}
+    environment: staging
     runs-on: ubuntu-latest
 
     steps:
