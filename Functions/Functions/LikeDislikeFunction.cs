@@ -27,7 +27,7 @@ namespace SSW.Rules.Functions
 
         [FunctionName("LikeDislikeFunction")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             //Add Auth

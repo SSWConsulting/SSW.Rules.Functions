@@ -28,7 +28,7 @@ namespace SSW.Rules.Functions
 
         [FunctionName("HealthCheckFunction")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogWarning($"HTTP trigger function {nameof(HealthCheckFunction)} received a request.");
