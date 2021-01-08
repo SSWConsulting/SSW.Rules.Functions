@@ -2,8 +2,9 @@ open System
 open Farmer
 open Farmer.Builders
 
-let audience = Environment.GetEnvironmentVariable  "AUTH0_AUDIENCE"
-let issuer = Environment.GetEnvironmentVariable  "AUTH0_ISSUER"
+let audience = Environment.GetEnvironmentVariable  "OAUTH_AUDIENCE"
+let issuer = Environment.GetEnvironmentVariable  "OAUTH_ISSUER"
+let openIdConfig = Environment.GetEnvironmentVariable  "OAUTH_OPENIDCONFIG"
 let mutable namePrefix = Environment.GetEnvironmentVariable "AZURE_RG_PREFIX"
 
 if isNull namePrefix then
@@ -24,6 +25,7 @@ printfn "Creating Functions App"
 let myFunctions = functions {
     name (namePrefix + "-functions")
     setting "OidcApiAuthorizationSettings:Audience" audience
+    setting "OidcApiAuthorizationSettings:OpenIdConfigUrl" openIdConfig
     setting "OidcApiAuthorizationSettings:IssuerUrl" issuer
     setting "CosmosDb:Account" myCosmosDb.Endpoint
     setting "CosmosDb:Key" myCosmosDb.PrimaryKey
