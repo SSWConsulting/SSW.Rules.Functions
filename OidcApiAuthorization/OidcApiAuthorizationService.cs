@@ -21,6 +21,7 @@ namespace OidcApiAuthorization
         private readonly IOidcConfigurationManager _oidcConfigurationManager;
 
         private readonly string _issuerUrl = null;
+        private readonly string _openIdUrl = null;
         private readonly string _audience = null;
 
         public OidcApiAuthorizationService(
@@ -30,6 +31,7 @@ namespace OidcApiAuthorization
             IOidcConfigurationManager oidcConfigurationManager)
         {
             _issuerUrl = apiAuthorizationSettingsOptions?.Value?.IssuerUrl;
+            _openIdUrl = apiAuthorizationSettingsOptions?.Value?.OpenIdConfigUrl;
             _audience = apiAuthorizationSettingsOptions?.Value?.Audience;
 
             _authorizationHeaderBearerTokenExractor = authorizationHeaderBearerTokenExractor;
@@ -104,7 +106,7 @@ namespace OidcApiAuthorization
                         _jwtSecurityTokenHandlerWrapper.ValidateToken(
                             authorizationBearerToken,
                             tokenValidationParameters);
-
+                            
                         isTokenValid = true;
                     }
                     catch (SecurityTokenSignatureKeyNotFoundException)
@@ -113,7 +115,6 @@ namespace OidcApiAuthorization
                         // validating the JWT could not be found. This could happen if the issuer has
                         // changed the signing keys since the last time they were retrieved by the
                         // ConfigurationManager.
-
                         if (validationRetryCount == 0)
                         {
                             // To handle the SecurityTokenSignatureKeyNotFoundException we ask the
@@ -149,7 +150,7 @@ namespace OidcApiAuthorization
         public async Task<HealthCheckResult> HealthCheckAsync()
         {
             if (string.IsNullOrWhiteSpace(_audience)
-                || string.IsNullOrWhiteSpace(_issuerUrl))
+                || string.IsNullOrWhiteSpace(_openIdUrl))
             {
                 return new HealthCheckResult(
                     $"Some or all {nameof(OidcApiAuthorizationSettings)} are missing.");
