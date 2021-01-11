@@ -7,7 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using AzureGems.Repository.CosmosDB;
 
 [assembly: FunctionsStartup(typeof(SSW.Rules.Functions.Startup))]
-namespace SSW.Rules.Functions {
+namespace SSW.Rules.Functions
+{
     public class Startup : FunctionsStartup
     {
         private static readonly IConfigurationRoot Configuration = new ConfigurationBuilder()
@@ -28,6 +29,7 @@ namespace SSW.Rules.Functions {
                     .WithContainerConfig(c =>
                     {
                         c.AddContainer<LikeDislike>(containerId: nameof(LikeDislike), partitionKeyPath: "/id");
+                        c.AddContainer<Bookmark>(containerId: nameof(Bookmark), partitionKeyPath: "/id");
                     });
             });
             builder.Services.AddCosmosDbContext<RulesDbContext>();
