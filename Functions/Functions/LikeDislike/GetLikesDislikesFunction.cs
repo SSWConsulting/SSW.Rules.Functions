@@ -1,16 +1,10 @@
-using System;
-using System.IO;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using OidcApiAuthorization.Abstractions;
-using OidcApiAuthorization.Models;
 
 namespace SSW.Rules.Functions
 {
