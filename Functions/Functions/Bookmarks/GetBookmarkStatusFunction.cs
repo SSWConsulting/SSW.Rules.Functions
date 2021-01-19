@@ -17,7 +17,7 @@ namespace SSW.Rules.Functions
             _dbContext = dbContext;
         }
 
-        [FunctionName("GetBookmarkFunction")]
+        [FunctionName("GetBookmarkStatusFunction")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
