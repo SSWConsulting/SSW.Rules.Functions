@@ -41,8 +41,9 @@ namespace SSW.Rules.Functions
                 log.LogInformation($"Could not find results for user: {UserId}");
                 return new JsonResult(new
                 {
-                    error = false,
-                    message = "",
+                    error = true,
+                    message = $"Could not find results for user: {UserId}",
+                    bookmarkedRules = bookmarks
                 });
             }
             return new JsonResult(new
