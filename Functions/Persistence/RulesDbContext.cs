@@ -7,5 +7,7 @@ namespace SSW.Rules.Functions
     {
         public IRepository<LikeDislike> LikeDislikes { get; set; }
         public IRepository<Bookmark> Bookmarks { get; set; }
+        public IRepository<SecretContent> SecretContents { get; set; }
+        public IRepository<User> Users { get; set; }
     }
 }
