@@ -34,22 +34,31 @@ namespace SSW.Rules.Functions
             log.LogWarning($"HTTP trigger function {nameof(HealthCheckFunction)} received a request.");
 
             HealthCheckResult result = await _apiAuthorization.HealthCheckAsync();
-            var likeDislikeEntity = await _dbContext.LikeDislikes.Add(new LikeDislike {
+            var likeDislikeEntity = await _dbContext.LikeDislikes.Add(new LikeDislike
+            {
                 Id = Guid.NewGuid().ToString(),
-				Type = ReactionType.Like,
+                Type = ReactionType.Like,
                 RuleGuid = "exampleRule123",
                 UserId = "exampleUser123",
                 Discriminator = typeof(LikeDislike).FullName
-			});
+            });
 
-            var bookmarkEntity = await _dbContext.Bookmarks.Add(new Bookmark {
+            var bookmarkEntity = await _dbContext.Bookmarks.Add(new Bookmark
+            {
                 Id = Guid.NewGuid().ToString(),
                 RuleGuid = "exampleRule123",
                 UserId = "exampleUser123",
                 Discriminator = typeof(Bookmark).FullName
-			});
+            });
 
-            if (result.IsHealthy && likeDislikeEntity != null && bookmarkEntity != null)
+            var secretContentEntity = await _dbContext.SecretContents.Add(new SecretContent
+            {
+                Id = Guid.NewGuid().ToString(),
+                OrganisationId = "123123",
+                Discriminator = typeof(SecretContent).FullName
+            });
+
+            if (result.IsHealthy && likeDislikeEntity != null && bookmarkEntity != null && secretContentEntity != null)
             {
                 log.LogWarning($"{nameof(HealthCheckFunction)} health check OK.");
             }
