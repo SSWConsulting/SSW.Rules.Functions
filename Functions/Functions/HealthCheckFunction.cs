@@ -52,6 +52,7 @@ namespace SSW.Rules.Functions
             var secretContentEntity = await _dbContext.SecretContents.Add(new SecretContent
             {
                 OrganisationId = "123123",
+                Content = "Don't tell anyone about this",
                 Discriminator = typeof(SecretContent).FullName
             });
 
