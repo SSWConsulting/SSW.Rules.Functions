@@ -36,7 +36,6 @@ namespace SSW.Rules.Functions
             HealthCheckResult result = await _apiAuthorization.HealthCheckAsync();
             var likeDislikeEntity = await _dbContext.LikeDislikes.Add(new LikeDislike
             {
-                Id = Guid.NewGuid().ToString(),
                 Type = ReactionType.Like,
                 RuleGuid = "exampleRule123",
                 UserId = "exampleUser123",
@@ -45,7 +44,6 @@ namespace SSW.Rules.Functions
 
             var bookmarkEntity = await _dbContext.Bookmarks.Add(new Bookmark
             {
-                Id = Guid.NewGuid().ToString(),
                 RuleGuid = "exampleRule123",
                 UserId = "exampleUser123",
                 Discriminator = typeof(Bookmark).FullName
@@ -53,7 +51,6 @@ namespace SSW.Rules.Functions
 
             var secretContentEntity = await _dbContext.SecretContents.Add(new SecretContent
             {
-                Id = Guid.NewGuid().ToString(),
                 OrganisationId = "123123",
                 Discriminator = typeof(SecretContent).FullName
             });

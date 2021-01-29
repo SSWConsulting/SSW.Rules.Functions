@@ -58,7 +58,6 @@ namespace SSW.Rules.Functions
 
             if (model == null)
             {
-                data.Id = Guid.NewGuid().ToString();
                 model = await _dbContext.LikeDislikes.Add(data);
                 log.LogInformation("Added new reaction. Id: {0}", model.Id);
             }

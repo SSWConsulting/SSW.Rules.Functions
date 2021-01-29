@@ -57,7 +57,6 @@ namespace SSW.Rules.Functions
 
             if (model == null)
             {
-                data.Id = Guid.NewGuid().ToString();
                 model = await _dbContext.Bookmarks.Add(data);
                 log.LogInformation("Added new bookmark on rule. Id: {0}", model.Id);
             }
