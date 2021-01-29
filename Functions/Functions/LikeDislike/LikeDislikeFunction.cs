@@ -29,7 +29,6 @@ namespace SSW.Rules.Functions
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            //Add Auth
             ApiAuthorizationResult authorizationResult = await _apiAuthorization.AuthorizeAsync(req.Headers);
 
             if (authorizationResult.Failed)
@@ -44,7 +43,6 @@ namespace SSW.Rules.Functions
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             data = JsonConvert.DeserializeObject<LikeDislike>(requestBody);
 
-            // 1. validate data
             if (data == null)
             {
                 return new JsonResult(new
@@ -54,14 +52,12 @@ namespace SSW.Rules.Functions
                 });
             }
 
-            // 2. Check if data already exists (i.e. user has already liked or disliked)
             var results = await _dbContext.LikeDislikes.Query(q => q.Where(w => w.RuleGuid == data.RuleGuid && w.UserId == data.UserId));
             var model = results.FirstOrDefault();
             log.LogInformation($"reactions on same rule by same user: {results.Count()}");
 
             if (model == null)
             {
-                data.Id = Guid.NewGuid().ToString();
                 model = await _dbContext.LikeDislikes.Add(data);
                 log.LogInformation("Added new reaction. Id: {0}", model.Id);
             }
