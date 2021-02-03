@@ -24,7 +24,6 @@ namespace SSW.Rules.Functions
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("We made it here :)");
             ApiAuthorizationResult authorizationResult = await _apiAuthorization.AuthorizeAsync(req.Headers);
 
             if (authorizationResult.Failed)
