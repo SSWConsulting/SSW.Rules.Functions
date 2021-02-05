@@ -6,7 +6,6 @@
     public class OidcApiAuthorizationSettings
     {
         private string _issuerUrl;
-        private string _openIdConfigUrl;
 
 
         /// <summary>
