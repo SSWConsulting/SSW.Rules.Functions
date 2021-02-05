@@ -21,7 +21,6 @@ namespace OidcApiAuthorization
         private readonly IOidcConfigurationManager _oidcConfigurationManager;
 
         private readonly string _issuerUrl = null;
-        private readonly string _openIdUrl = null;
         private readonly string _audience = null;
 
         public OidcApiAuthorizationService(
@@ -31,7 +30,6 @@ namespace OidcApiAuthorization
             IOidcConfigurationManager oidcConfigurationManager)
         {
             _issuerUrl = apiAuthorizationSettingsOptions?.Value?.IssuerUrl;
-            _openIdUrl = apiAuthorizationSettingsOptions?.Value?.OpenIdConfigUrl;
             _audience = apiAuthorizationSettingsOptions?.Value?.Audience;
 
             _authorizationHeaderBearerTokenExractor = authorizationHeaderBearerTokenExractor;
@@ -106,7 +104,7 @@ namespace OidcApiAuthorization
                         _jwtSecurityTokenHandlerWrapper.ValidateToken(
                             authorizationBearerToken,
                             tokenValidationParameters);
-                            
+
                         isTokenValid = true;
                     }
                     catch (SecurityTokenSignatureKeyNotFoundException)
@@ -150,7 +148,7 @@ namespace OidcApiAuthorization
         public async Task<HealthCheckResult> HealthCheckAsync()
         {
             if (string.IsNullOrWhiteSpace(_audience)
-                || string.IsNullOrWhiteSpace(_openIdUrl))
+                || string.IsNullOrWhiteSpace(_issuerUrl))
             {
                 return new HealthCheckResult(
                     $"Some or all {nameof(OidcApiAuthorizationSettings)} are missing.");

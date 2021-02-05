@@ -4,7 +4,6 @@
         "AzureWebJobsStorage": "UseDevelopmentStorage=true",
         "FUNCTIONS_WORKER_RUNTIME": "dotnet",
 
-        "OidcApiAuthorizationSettings:OpenIdConfigUrl": "",
         "OidcApiAuthorizationSettings:IssuerUrl": "",
         "OidcApiAuthorizationSettings:Audience": "",
 

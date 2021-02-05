@@ -6,7 +6,6 @@
     public class OidcApiAuthorizationSettings
     {
         private string _issuerUrl;
-        private string _openIdConfigUrl;
 
 
         /// <summary>
@@ -41,29 +40,6 @@
             set
             {
                 _issuerUrl = FormatUrl(value);
-            }
-        }
-
-
-        /// <summary>
-        /// The URL of the Open ID Connect metadata document that will perform API authorization.
-        /// </summary>
-        /// <remarks>
-        /// This URL will be
-        /// used as part of the OpenID Connect protocol to obtain the the signing keys
-        /// that will be used to validate the JWT Bearer tokens in incoming HTTP request headers.
-        /// 
-        /// For Auth0 the URL format is:  https://{Auth0-tenant-domain}.auth0.com 
-        /// </remarks>
-        public string OpenIdConfigUrl
-        {
-            get
-            {
-                return _openIdConfigUrl;
-            }
-            set
-            {
-                _openIdConfigUrl = FormatUrl(value);
             }
         }
 
