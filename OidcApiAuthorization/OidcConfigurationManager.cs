@@ -20,11 +20,11 @@ namespace OidcApiAuthorization
         public OidcConfigurationManager(
             IOptions<OidcApiAuthorizationSettings> settingsOptions)
         {
-            string OpenIdConfigUrl = settingsOptions.Value.OpenIdConfigUrl;
+            string issuerUrl = settingsOptions.Value.IssuerUrl;
 
             var documentRetriever = new HttpDocumentRetriever 
             { 
-                RequireHttps = OpenIdConfigUrl.StartsWith("https://") 
+                RequireHttps = issuerUrl.StartsWith("https://") 
             };
 
             // Setup the ConfigurationManager to call the issuer (i.e. Auth0) of the signing keys.
@@ -34,7 +34,7 @@ namespace OidcApiAuthorization
             // The configuration is not retrieved from the OpenID Connect provider until the first time
             // the ConfigurationManager.GetConfigurationAsync() is called below.
             _configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-                $"{OpenIdConfigUrl}.well-known/openid-configuration",
+                $"{issuerUrl}.well-known/openid-configuration",
                 new OpenIdConnectConfigurationRetriever(),
                 documentRetriever
             );
