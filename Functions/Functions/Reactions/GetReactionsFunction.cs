@@ -8,21 +8,21 @@ using Microsoft.Extensions.Logging;
 
 namespace SSW.Rules.Functions
 {
-    public class GetLikesDislikesFunction
+    public class GetReactionsFunction
     {
         private readonly RulesDbContext _dbContext;
 
-        public GetLikesDislikesFunction(RulesDbContext dbContext)
+        public GetReactionsFunction(RulesDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        [FunctionName("GetLikesDislikesFunction")]
+        [FunctionName("GetReactionsFunction")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogWarning($"HTTP trigger function {nameof(GetLikesDislikesFunction)} received a request.");
+            log.LogWarning($"HTTP trigger function {nameof(GetReactionsFunction)} received a request.");
 
             string RuleGuid = req.Query["rule_guid"];
             string UserId = req.Query["user_id"];
@@ -36,7 +36,7 @@ namespace SSW.Rules.Functions
                 });
             }
 
-            var likes = await _dbContext.LikeDislikes.Query(q => q.Where(w => w.RuleGuid == RuleGuid));
+            var likes = await _dbContext.Reactions.Query(q => q.Where(w => w.RuleGuid == RuleGuid));
             if (likes.Count() == 0)
             {
                 return new JsonResult(new
@@ -66,8 +66,10 @@ namespace SSW.Rules.Functions
             {
                 error = false,
                 message = "",
+                superLikeCount = results.Where(r => r.Type == ReactionType.SuperLike).FirstOrDefault()?.Count ?? 0,
                 likeCount = results.Where(r => r.Type == ReactionType.Like).FirstOrDefault()?.Count ?? 0,
                 dislikeCount = results.Where(r => r.Type == ReactionType.Dislike).FirstOrDefault()?.Count ?? 0,
+                superDislikeCount = results.Where(r => r.Type == ReactionType.SuperDislike).FirstOrDefault()?.Count ?? 0,
                 userStatus = userStatus
             });
         }

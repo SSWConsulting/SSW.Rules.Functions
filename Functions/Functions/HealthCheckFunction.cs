@@ -34,12 +34,12 @@ namespace SSW.Rules.Functions
             log.LogWarning($"HTTP trigger function {nameof(HealthCheckFunction)} received a request.");
 
             HealthCheckResult result = await _apiAuthorization.HealthCheckAsync();
-            var likeDislikeEntity = await _dbContext.LikeDislikes.Add(new LikeDislike
+            var reactionEntity = await _dbContext.Reactions.Add(new Reaction
             {
                 Type = ReactionType.Like,
                 RuleGuid = "exampleRule123",
                 UserId = "exampleUser123",
-                Discriminator = typeof(LikeDislike).FullName
+                Discriminator = typeof(Reaction).FullName
             });
 
             var bookmarkEntity = await _dbContext.Bookmarks.Add(new Bookmark
@@ -56,7 +56,7 @@ namespace SSW.Rules.Functions
                 Discriminator = typeof(SecretContent).FullName
             });
 
-            if (result.IsHealthy && likeDislikeEntity != null && bookmarkEntity != null && secretContentEntity != null)
+            if (result.IsHealthy && reactionEntity != null && bookmarkEntity != null && secretContentEntity != null)
             {
                 log.LogWarning($"{nameof(HealthCheckFunction)} health check OK.");
             }
