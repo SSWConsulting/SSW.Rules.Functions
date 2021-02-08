@@ -28,7 +28,7 @@ namespace SSW.Rules.Functions
                     .WithSharedThroughput(400)
                     .WithContainerConfig(c =>
                     {
-                        c.AddContainer<LikeDislike>(containerId: nameof(LikeDislike), partitionKeyPath: "/id");
+                        c.AddContainer<Reaction>(containerId: nameof(Reaction), partitionKeyPath: "/id");
                         c.AddContainer<Bookmark>(containerId: nameof(Bookmark), partitionKeyPath: "/id");
                         c.AddContainer<SecretContent>(containerId: nameof(SecretContent), partitionKeyPath: "/id");
                         c.AddContainer<User>(containerId: nameof(User), partitionKeyPath: "/id");

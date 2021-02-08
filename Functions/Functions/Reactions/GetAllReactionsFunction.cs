@@ -8,21 +8,21 @@ using Microsoft.Extensions.Logging;
 
 namespace SSW.Rules.Functions
 {
-    public class GetAllLikedDisliked
+    public class GetAllReactionsFunction
     {
         private readonly RulesDbContext _dbContext;
 
-        public GetAllLikedDisliked(RulesDbContext dbContext)
+        public GetAllReactionsFunction(RulesDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        [FunctionName("GetAllLikedDisliked")]
+        [FunctionName("GetAllReactionsFunction")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogWarning($"HTTP trigger function {nameof(GetAllLikedDisliked)} received a request.");
+            log.LogWarning($"HTTP trigger function {nameof(GetAllReactionsFunction)} received a request.");
 
             string UserId = req.Query["user_id"];
 
@@ -35,7 +35,7 @@ namespace SSW.Rules.Functions
                 });
             }
             log.LogInformation("Checking for bookmarks by user: {0}", UserId);
-            var likesDislikes = await _dbContext.LikeDislikes.Query(q => q.Where(w => w.UserId == UserId));
+            var likesDislikes = await _dbContext.Reactions.Query(q => q.Where(w => w.UserId == UserId));
             if (likesDislikes.Count() == 0)
             {
                 log.LogInformation($"Could not find results for user: {UserId}");
