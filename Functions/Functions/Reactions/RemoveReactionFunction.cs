@@ -42,7 +42,8 @@ namespace SSW.Rules.Functions
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             data = JsonConvert.DeserializeObject<Reaction>(requestBody);
 
-            if (data == null)
+            bool isNull = string.IsNullOrEmpty(data?.RuleGuid) || string.IsNullOrEmpty(data?.UserId) || data?.Type == null;
+            if (data == null || isNull)
             {
                 return new JsonResult(new
                 {
@@ -66,9 +67,9 @@ namespace SSW.Rules.Functions
                 });
             }
             var deleteResults = await _dbContext.Reactions.Delete(model);
-            
+
             log.LogInformation($"User: {model.UserId}, Rule: {model.RuleGuid}, Id: {model.Id}");
-            
+
             return new JsonResult(new
             {
                 error = false,
