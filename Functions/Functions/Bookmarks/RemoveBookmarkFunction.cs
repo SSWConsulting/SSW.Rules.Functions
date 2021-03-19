@@ -42,7 +42,8 @@ namespace SSW.Rules.Functions
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             data = JsonConvert.DeserializeObject<Bookmark>(requestBody);
 
-            if (data == null)
+            bool isNull = string.IsNullOrEmpty(data?.RuleGuid) || string.IsNullOrEmpty(data?.UserId);
+            if (data == null || isNull)
             {
                 return new JsonResult(new
                 {
