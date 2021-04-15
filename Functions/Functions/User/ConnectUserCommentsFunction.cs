@@ -13,11 +13,13 @@ using System.Linq;
 
 namespace SSW.Rules.Functions
 {
+    /// <summary>
+    /// Takes a Disqus ID and adds it to a user's account object in CosmosDB. Creates the user object if it doesn't already exist.
+    /// </summary>
     public class ConnectUserCommentsFunction
     {
         private readonly RulesDbContext _dbContext;
         private readonly IApiAuthorization _apiAuthorization;
-
         public ConnectUserCommentsFunction(RulesDbContext dbContext, IApiAuthorization apiAuthorization)
         {
             _dbContext = dbContext;
@@ -65,10 +67,11 @@ namespace SSW.Rules.Functions
 
             var exisitingCommentsId = await _dbContext.Users.Query(q => q.Where(w => w.CommentsUserId == data.CommentsUserId));
 
-            if (exisitingCommentsId.FirstOrDefault() != null) {
+            if (exisitingCommentsId.FirstOrDefault() != null)
+            {
 
             }
-                User user = existingUser.FirstOrDefault();
+            User user = existingUser.FirstOrDefault();
 
             if (!string.IsNullOrEmpty(data?.CommentsUserId) && user?.CommentsUserId == data.CommentsUserId)
             {
@@ -76,7 +79,7 @@ namespace SSW.Rules.Functions
                 log.LogInformation(user.CommentsUserId.ToString());
                 return new ConflictObjectResult(new
                 {
-                    message = "User already has the same comments account assosiated",
+                    message = "User already has the same comments account associated",
                 });
             }
 
