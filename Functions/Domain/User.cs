@@ -7,6 +7,6 @@ namespace SSW.Rules.Functions
     {
         public string UserId { get; set; }
         public string CommentsUserId { get; set; }
-        public string OrganisationId { get; set; }
+        public int OrganisationId { get; set; }
     }
 }
