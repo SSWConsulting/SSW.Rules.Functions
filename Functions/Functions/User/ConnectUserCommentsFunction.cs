@@ -49,7 +49,7 @@ namespace SSW.Rules.Functions
             {
                 return new BadRequestObjectResult(new
                 {
-                    message = "Request body is empty or incorrect",
+                    message = "Request body is empty or is missing CommentsUserId or UserId fields",
                 });
             }
 
