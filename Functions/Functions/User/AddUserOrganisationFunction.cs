@@ -45,8 +45,7 @@ namespace SSW.Rules.Functions
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             data = JsonConvert.DeserializeObject<User>(requestBody);
 
-            bool isNull = data?.OrganisationId == null || string.IsNullOrEmpty(data?.UserId);
-            if (data == null || isNull)
+            if (data == null || data?.OrganisationId == null || string.IsNullOrEmpty(data?.UserId))
             {
                 return new JsonResult(new
                 {
