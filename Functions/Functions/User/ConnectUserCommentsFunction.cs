@@ -42,41 +42,38 @@ namespace SSW.Rules.Functions
 
             log.LogWarning($"HTTP trigger function {nameof(ConnectUserCommentsFunction)} request is authorized.");
 
-            User data;
-
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            data = JsonConvert.DeserializeObject<User>(requestBody);
+            User data = JsonConvert.DeserializeObject<User>(requestBody);
 
-            bool isNull = string.IsNullOrEmpty(data?.CommentsUserId) || string.IsNullOrEmpty(data?.UserId);
-            if (data == null || isNull)
+            if (data == null || string.IsNullOrEmpty(data?.CommentsUserId) || string.IsNullOrEmpty(data?.UserId))
             {
                 return new BadRequestObjectResult(new
                 {
                     message = "Request body is empty or incorrect",
                 });
             }
-            User result;
 
             var existingUser = await _dbContext.Users.Query(q => q.Where(w => w.UserId == data.UserId));
-            var model = existingUser.FirstOrDefault();
+            User user = existingUser.FirstOrDefault();
 
-            if (model == null)
+            if (user == null)
             {
-                result = await _dbContext.Users.Add(data);
+                await _dbContext.Users.Add(data);
+                return new OkResult();
             }
 
             var exisitingCommentsId = await _dbContext.Users.Query(q => q.Where(w => w.CommentsUserId == data.CommentsUserId));
 
             if (exisitingCommentsId.FirstOrDefault() != null)
             {
-
+                return new ConflictObjectResult(new
+                {
+                    message = "This comments account is already being used by another user",
+                });
             }
-            User user = existingUser.FirstOrDefault();
 
-            if (!string.IsNullOrEmpty(data?.CommentsUserId) && user?.CommentsUserId == data.CommentsUserId)
+            if (user?.CommentsUserId == data.CommentsUserId)
             {
-                log.LogInformation(data.CommentsUserId.ToString());
-                log.LogInformation(user.CommentsUserId.ToString());
                 return new ConflictObjectResult(new
                 {
                     message = "User already has the same comments account associated",
@@ -84,7 +81,7 @@ namespace SSW.Rules.Functions
             }
 
             user.CommentsUserId = data.CommentsUserId;
-            result = await _dbContext.Users.Update(user);
+            await _dbContext.Users.Update(user);
 
             return new OkResult();
         }
