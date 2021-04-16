@@ -13,6 +13,9 @@ using System.Linq;
 
 namespace SSW.Rules.Functions
 {
+    /// <summary>
+    /// Retrives a users object using their UserId
+    /// </summary>
     public class GetUserFunction
     {
         private readonly RulesDbContext _dbContext;
@@ -50,7 +53,9 @@ namespace SSW.Rules.Functions
             }
 
             var result = await _dbContext.Users.Query(q => q.Where(w => w.UserId == UserId));
-            if (result.Count() == 0)
+            User user = result.FirstOrDefault();
+
+            if (user == null)
             {
                 log.LogInformation($"Could not find results for user: {UserId}");
                 return new BadRequestObjectResult(new
@@ -59,21 +64,12 @@ namespace SSW.Rules.Functions
                 });
             }
 
-            User user = result.FirstOrDefault();
-
-            if (string.IsNullOrEmpty(user?.CommentsUserId))
-            {
-                return new OkObjectResult(new
-                {
-                    user = user,
-                    commentsConnected = false,
-                });
-            }
+            bool commentsConnected = string.IsNullOrEmpty(user?.CommentsUserId);
 
             return new OkObjectResult(new
             {
                 user = user,
-                commentsConnected = true,
+                commentsConnected = commentsConnected,
             });
         }
     }

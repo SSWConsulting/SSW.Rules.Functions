@@ -13,6 +13,9 @@ using System.Linq;
 
 namespace SSW.Rules.Functions
 {
+    /// <summary>
+    /// Removes the CommentsUserId from a user object so they can connect a different comments account
+    /// </summary>
     public class RemoveUserCommentsAccount
     {
         private readonly RulesDbContext _dbContext;
@@ -40,15 +43,9 @@ namespace SSW.Rules.Functions
 
             log.LogWarning($"HTTP trigger function {nameof(RemoveUserCommentsAccount)} request is authorized.");
 
-            User data;
-
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-            log.LogInformation(requestBody);
-
-            data = JsonConvert.DeserializeObject<User>(requestBody);
-
-            log.LogInformation(data.ToString());
+            User data = JsonConvert.DeserializeObject<User>(requestBody);
 
             if (data == null || string.IsNullOrEmpty(data?.UserId))
             {
@@ -59,7 +56,7 @@ namespace SSW.Rules.Functions
             }
 
             var user = await _dbContext.Users.Query(q => q.Where(w => w.UserId == data.UserId));
-            var model = user.FirstOrDefault();
+            User model = user.FirstOrDefault();
 
             if (model == null)
             {
@@ -71,7 +68,7 @@ namespace SSW.Rules.Functions
 
             model.CommentsUserId = string.Empty;
 
-            User result = await _dbContext.Users.Update(model);
+            await _dbContext.Users.Update(model);
 
             return new OkResult();
         }
