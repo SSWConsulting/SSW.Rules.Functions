@@ -51,7 +51,7 @@ namespace SSW.Rules.Functions
             {
                 return new BadRequestObjectResult(new
                 {
-                    message = "Request body is empty or incorrect",
+                    message = "Request body is empty or UserId is missing",
                 });
             }
 
@@ -66,7 +66,7 @@ namespace SSW.Rules.Functions
                 });
             }
 
-            model.CommentsUserId = string.Empty;
+            model.CommentsUserId = null;
 
             await _dbContext.Users.Update(model);
 

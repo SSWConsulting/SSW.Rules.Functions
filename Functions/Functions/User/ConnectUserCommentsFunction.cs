@@ -62,6 +62,21 @@ namespace SSW.Rules.Functions
                 return new OkResult();
             }
 
+            if (user?.CommentsUserId == data.CommentsUserId)
+            {
+                return new OkObjectResult(new
+                {
+                    message = "User already has the same comments account associated",
+                });
+            }
+
+            if(!string.IsNullOrEmpty(user?.CommentsUserId)) {
+                return new ConflictObjectResult( new {
+                    //Error or OK with message?
+                    message = "Different comments account already connected"
+                });
+            }
+
             var exisitingCommentsId = await _dbContext.Users.Query(q => q.Where(w => w.CommentsUserId == data.CommentsUserId));
 
             if (exisitingCommentsId.FirstOrDefault() != null)
@@ -69,14 +84,6 @@ namespace SSW.Rules.Functions
                 return new ConflictObjectResult(new
                 {
                     message = "This comments account is already being used by another user",
-                });
-            }
-
-            if (user?.CommentsUserId == data.CommentsUserId)
-            {
-                return new ConflictObjectResult(new
-                {
-                    message = "User already has the same comments account associated",
                 });
             }
 

@@ -64,7 +64,7 @@ namespace SSW.Rules.Functions
                 });
             }
 
-            bool commentsConnected = string.IsNullOrEmpty(user?.CommentsUserId);
+            bool commentsConnected = !string.IsNullOrEmpty(user?.CommentsUserId);
 
             return new OkObjectResult(new
             {
