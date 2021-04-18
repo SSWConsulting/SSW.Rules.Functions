@@ -13,9 +13,6 @@ using System.Linq;
 
 namespace SSW.Rules.Functions
 {
-    /// <summary>
-    /// Removes the CommentsUserId from a user object so they can connect a different comments account
-    /// </summary>
     public class RemoveUserCommentsAccount
     {
         private readonly RulesDbContext _dbContext;

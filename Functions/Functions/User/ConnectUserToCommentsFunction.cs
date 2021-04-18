@@ -13,9 +13,6 @@ using System.Linq;
 
 namespace SSW.Rules.Functions
 {
-    /// <summary>
-    /// Takes a Disqus ID and adds it to a user's account object in CosmosDB. Creates the user object if it doesn't already exist.
-    /// </summary>
     public class ConnectUserCommentsFunction
     {
         private readonly RulesDbContext _dbContext;

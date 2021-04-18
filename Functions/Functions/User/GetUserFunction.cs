@@ -13,9 +13,6 @@ using System.Linq;
 
 namespace SSW.Rules.Functions
 {
-    /// <summary>
-    /// Retrives a users object using their UserId
-    /// </summary>
     public class GetUserFunction
     {
         private readonly RulesDbContext _dbContext;
