@@ -13,11 +13,11 @@ using System.Linq;
 
 namespace SSW.Rules.Functions
 {
-    public class ConnectUserCommentsFunction
+    public class ConnectUserToCommentsFunction
     {
         private readonly RulesDbContext _dbContext;
         private readonly IApiAuthorization _apiAuthorization;
-        public ConnectUserCommentsFunction(RulesDbContext dbContext, IApiAuthorization apiAuthorization)
+        public ConnectUserToCommentsFunction(RulesDbContext dbContext, IApiAuthorization apiAuthorization)
         {
             _dbContext = dbContext;
             _apiAuthorization = apiAuthorization;
@@ -37,7 +37,7 @@ namespace SSW.Rules.Functions
                 return new UnauthorizedResult();
             }
 
-            log.LogWarning($"HTTP trigger function {nameof(ConnectUserCommentsFunction)} request is authorized.");
+            log.LogWarning($"HTTP trigger function {nameof(ConnectUserToCommentsFunction)} request is authorized.");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             User data = JsonConvert.DeserializeObject<User>(requestBody);
@@ -69,7 +69,6 @@ namespace SSW.Rules.Functions
 
             if(!string.IsNullOrEmpty(user?.CommentsUserId)) {
                 return new ConflictObjectResult( new {
-                    //Error or OK with message?
                     message = "Different comments account already connected"
                 });
             }

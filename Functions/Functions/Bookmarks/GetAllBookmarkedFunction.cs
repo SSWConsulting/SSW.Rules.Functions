@@ -8,21 +8,21 @@ using Microsoft.Extensions.Logging;
 
 namespace SSW.Rules.Functions
 {
-    public class GetAllBookmarked
+    public class GetAllBookmarkedFunction
     {
         private readonly RulesDbContext _dbContext;
 
-        public GetAllBookmarked(RulesDbContext dbContext)
+        public GetAllBookmarkedFunction(RulesDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        [FunctionName("GetAllBookmarked")]
+        [FunctionName("GetAllBookmarkedFunction")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogWarning($"HTTP trigger function {nameof(GetAllBookmarked)} received a request.");
+            log.LogWarning($"HTTP trigger function {nameof(GetAllBookmarkedFunction)} received a request.");
 
             string UserId = req.Query["user_id"];
 

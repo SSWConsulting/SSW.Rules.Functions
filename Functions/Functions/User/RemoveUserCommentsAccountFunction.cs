@@ -13,18 +13,18 @@ using System.Linq;
 
 namespace SSW.Rules.Functions
 {
-    public class RemoveUserCommentsAccount
+    public class RemoveUserCommentsAccountFunction
     {
         private readonly RulesDbContext _dbContext;
         private readonly IApiAuthorization _apiAuthorization;
 
-        public RemoveUserCommentsAccount(RulesDbContext dbContext, IApiAuthorization apiAuthorization)
+        public RemoveUserCommentsAccountFunction(RulesDbContext dbContext, IApiAuthorization apiAuthorization)
         {
             _dbContext = dbContext;
             _apiAuthorization = apiAuthorization;
         }
 
-        [FunctionName("RemoveUserCommentsAccount")]
+        [FunctionName("RemoveUserCommentsAccountFunction")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
@@ -38,7 +38,7 @@ namespace SSW.Rules.Functions
                 return new UnauthorizedResult();
             }
 
-            log.LogWarning($"HTTP trigger function {nameof(RemoveUserCommentsAccount)} request is authorized.");
+            log.LogWarning($"HTTP trigger function {nameof(RemoveUserCommentsAccountFunction)} request is authorized.");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
