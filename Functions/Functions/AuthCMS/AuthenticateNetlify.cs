@@ -29,11 +29,9 @@ namespace SSW.Rules.Functions
                 return new BadRequestResult();
             }
 
-            log.LogInformation(scope);
+            string ClientId = System.Environment.GetEnvironmentVariable("CMS_OAUTH_CLIENT_ID", EnvironmentVariableTarget.Process);
 
-            string ClientId = System.Environment.GetEnvironmentVariable("OAUTH_CLIENT_ID", EnvironmentVariableTarget.Process);
-
-            return new RedirectResult($"https://github.com/login/oauth/authorize?client_id={ClientId}&scope=repo,user", true); //TODO: Check needed scope
+            return new RedirectResult($"https://github.com/login/oauth/authorize?client_id={ClientId}&scope={scope}", true);
         }
     }
 }

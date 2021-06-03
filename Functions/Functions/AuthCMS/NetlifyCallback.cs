@@ -49,8 +49,8 @@ namespace SSW.Rules.Functions
                 newClient.DefaultRequestHeaders.Add("Accept", "application/json");
                 HttpRequestMessage newRequest = new HttpRequestMessage(HttpMethod.Post, tokenUrl);
 
-                string clientId = System.Environment.GetEnvironmentVariable("OAUTH_CLIENT_ID", EnvironmentVariableTarget.Process);
-                string clientSecret = System.Environment.GetEnvironmentVariable("OAUTH_CLIENT_SECRET", EnvironmentVariableTarget.Process);
+                string clientId = System.Environment.GetEnvironmentVariable("CMS_OAUTH_CLIENT_ID", EnvironmentVariableTarget.Process);
+                string clientSecret = System.Environment.GetEnvironmentVariable("CMS_OAUTH_CLIENT_SECRET", EnvironmentVariableTarget.Process);
 
                 var body = new
                 {
@@ -66,7 +66,6 @@ namespace SSW.Rules.Functions
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                log.LogInformation(responseBody);
                 dynamic jsonBody = JsonConvert.DeserializeObject(responseBody);
 
                 authorisedObject = JsonConvert.SerializeObject(new
@@ -91,13 +90,11 @@ namespace SSW.Rules.Functions
           'authorization:github:success:" + authorisedObject + @"', 
           e.origin
         );
-        window.opener.postMessage();
         }
       window.addEventListener(""message"", recieveMessage, false);
       window.opener.postMessage(""authorizing:github"", ""*"");
     })()
     </script>";
-            // string script = "<script>console.log(\"Hello\")</script>";
 
             return new ContentResult { Content = script, ContentType = "text/html" };
         }
