@@ -25,7 +25,6 @@ namespace SSW.Rules.Functions
         {
             log.LogInformation($"C# HTTP trigger function {nameof(NetlifyCallback)} processed a request.");
 
-            string tokenUrl = "https://github.com/login/oauth/access_token";
             string code = req.Query["code"];
             string host = req.Headers["host"];
             log.LogInformation("host: " + host);
@@ -45,6 +44,7 @@ namespace SSW.Rules.Functions
 
             try
             {
+                string tokenUrl = "https://github.com/login/oauth/access_token";
                 HttpClient newClient = new HttpClient();
                 newClient.DefaultRequestHeaders.Add("Accept", "application/json");
                 HttpRequestMessage newRequest = new HttpRequestMessage(HttpMethod.Post, tokenUrl);
