@@ -26,12 +26,22 @@ namespace SSW.Rules.Functions
 
             if (string.IsNullOrEmpty(scope))
             {
-                return new BadRequestResult();
+                log.LogError("Missing scope param");
+                return new BadRequestObjectResult(new
+                {
+                    message = "Missing scope param",
+                });
             }
 
-            string ClientId = System.Environment.GetEnvironmentVariable("CMS_OAUTH_CLIENT_ID", EnvironmentVariableTarget.Process);
+            string clientId = System.Environment.GetEnvironmentVariable("CMS_OAUTH_CLIENT_ID", EnvironmentVariableTarget.Process);
 
-            return new RedirectResult($"https://github.com/login/oauth/authorize?client_id={ClientId}&scope={scope}", true);
+            if (string.IsNullOrEmpty(clientId))
+            {
+                log.LogError("Missing CMS_OAUTH_CLIENT_ID");
+                throw new ConfigurationErrorsException("Missing CMS_OAUTH_CLIENT_ID");
+            }
+
+            return new RedirectResult($"https://github.com/login/oauth/authorize?client_id={clientId}&scope={scope}", true);
         }
     }
 }

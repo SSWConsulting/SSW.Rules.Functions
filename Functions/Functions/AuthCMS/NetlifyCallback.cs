@@ -27,19 +27,24 @@ namespace SSW.Rules.Functions
 
             string code = req.Query["code"];
             string host = req.Headers["host"];
-            log.LogInformation("host: " + host);
 
             if (string.IsNullOrEmpty(code))
             {
+                log.LogError("Missing code param");
                 return new BadRequestObjectResult(new
                 {
                     message = "Missing code param",
                 });
             }
 
-            log.LogInformation(code);
-
-            string authorisedObject;
+            if (string.IsNullOrEmpty(host))
+            {
+                log.LogError("Missing host param");
+                return new BadRequestObjectResult(new
+                {
+                    message = "Missing host param",
+                });
+            }
 
             try
             {
@@ -50,6 +55,18 @@ namespace SSW.Rules.Functions
 
                 string clientId = System.Environment.GetEnvironmentVariable("CMS_OAUTH_CLIENT_ID", EnvironmentVariableTarget.Process);
                 string clientSecret = System.Environment.GetEnvironmentVariable("CMS_OAUTH_CLIENT_SECRET", EnvironmentVariableTarget.Process);
+
+                if (string.IsNullOrEmpty(clientId))
+                {
+                    log.LogError("Missing CMS_OAUTH_CLIENT_ID");
+                    throw new ConfigurationErrorsException("Missing CMS_OAUTH_CLIENT_ID");
+                }
+
+                if (string.IsNullOrEmpty(clientSecret))
+                {
+                    log.LogError("Missing CMS_OAUTH_CLIENT_SECRET");
+                    throw new ConfigurationErrorsException("Missing CMS_OAUTH_CLIENT_SECRET");
+                }
 
                 var body = new
                 {
@@ -67,35 +84,35 @@ namespace SSW.Rules.Functions
                 string responseBody = await response.Content.ReadAsStringAsync();
                 dynamic jsonBody = JsonConvert.DeserializeObject(responseBody);
 
-                authorisedObject = JsonConvert.SerializeObject(new
+                string authorisedObject = JsonConvert.SerializeObject(new
                 {
                     token = jsonBody.access_token,
                     provider = "github"
                 });
+                
+                string script = @"<script>
+                (function() {
+                    function recieveMessage(e) {
+                    console.log(""recieveMessage %o"", e);
+                    
+                    // send message to main window with the app
+                    window.opener.postMessage(
+                        'authorization:github:success:" + authorisedObject + @"', 
+                        e.origin
+                    );
+                    }
+                    window.addEventListener(""message"", recieveMessage, false);
+                    window.opener.postMessage(""authorizing:github"", ""*"");
+                })()
+                </script>";
+
+                return new ContentResult { Content = script, ContentType = "text/html" };
             }
             catch (HttpRequestException ex)
             {
                 log.LogError(ex.Message);
                 throw;
             }
-
-            string script = @"<script>
-    (function() {
-      function recieveMessage(e) {
-        console.log(""recieveMessage %o"", e);
-        
-        // send message to main window with the app
-        window.opener.postMessage(
-          'authorization:github:success:" + authorisedObject + @"', 
-          e.origin
-        );
-        }
-      window.addEventListener(""message"", recieveMessage, false);
-      window.opener.postMessage(""authorizing:github"", ""*"");
-    })()
-    </script>";
-
-            return new ContentResult { Content = script, ContentType = "text/html" };
         }
     }
 }
