@@ -39,7 +39,6 @@ namespace SSW.Rules.Functions
 
             log.LogInformation(code);
 
-            // Call Your  API
             string authorisedObject;
 
             try
