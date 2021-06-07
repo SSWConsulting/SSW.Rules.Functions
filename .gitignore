@@ -266,6 +266,3 @@ paket-files/
 __pycache__/
 *.pyc
 .ionide
-
-# MacOS
-.DS_STORE
