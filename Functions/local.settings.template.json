@@ -9,7 +9,10 @@
 
         "CosmosDb:Account": "",
         "CosmosDb:Key": "",
-        "CosmosDb:DatabaseName": ""
+        "CosmosDb:DatabaseName": "",
+
+        "CMS_OAUTH_CLIENT_ID": "",
+        "CMS_OAUTH_CLIENT_SECRET": ""
     },
     "Host": {
       "LocalHttpPort": 7071,
