@@ -62,7 +62,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Run ARM deploy
-      uses: azure/arm-deploy@v1
+      uses: azure/arm-deploy@main
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
