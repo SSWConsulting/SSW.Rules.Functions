@@ -32,6 +32,8 @@ namespace SSW.Rules.Functions
                         c.AddContainer<Bookmark>(containerId: nameof(Bookmark), partitionKeyPath: "/id");
                         c.AddContainer<SecretContent>(containerId: nameof(SecretContent), partitionKeyPath: "/id");
                         c.AddContainer<User>(containerId: nameof(User), partitionKeyPath: "/id");
+                        c.AddContainer<SyncHistory>(containerId: nameof(SyncHistory), partitionKeyPath: "/id");
+                        c.AddContainer<RuleHistoryCache>(containerId: nameof(RuleHistoryCache), partitionKeyPath: "/id");
                     });
             });
             builder.Services.AddCosmosDbContext<RulesDbContext>();
