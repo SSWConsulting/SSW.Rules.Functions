@@ -21,7 +21,7 @@ namespace SSW.Rules.Functions.Functions
 
         [FunctionName("GenerateHistoryFileFunction")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogWarning($"HTTP trigger function {nameof(GenerateHistoryFileFunction)} received a request.");
@@ -37,7 +37,11 @@ namespace SSW.Rules.Functions.Functions
                     file = history.MarkdownFilePath,
                     lastUpdated = history.ChangedAtDateTime,
                     lastUpdatedBy = history.ChangedByDisplayName,
-                    lastUpdatedByEmail = history.ChangedByEmail
+                    lastUpdatedByEmail = history.ChangedByEmail,
+
+                    created = history.ChangedAtDateTime,
+                    createdBy = history.ChangedByDisplayName,
+                    createdByEmail = history.ChangedByEmail
                 });
             }
 

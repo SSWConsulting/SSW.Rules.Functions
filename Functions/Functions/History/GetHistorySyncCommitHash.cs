@@ -6,7 +6,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.Linq;
 
 namespace SSW.Rules.Functions.Functions
@@ -22,7 +21,7 @@ namespace SSW.Rules.Functions.Functions
         
         [FunctionName("GetHistorySyncCommitHash")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogWarning($"HTTP trigger function {nameof(GetHistorySyncCommitHash)} received a request.");

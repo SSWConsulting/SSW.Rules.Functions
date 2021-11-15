@@ -6,5 +6,8 @@ namespace SSW.Rules.Functions
         public string lastUpdated { get; set; }
         public string lastUpdatedBy { get; set; }
         public string lastUpdatedByEmail { get; set; }
+        public string created { get; set; }
+        public string createdBy { get; set; }
+        public string createdByEmail { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace SSW.Rules.Functions.Functions.History
 
         [FunctionName("UpdateRuleHistory")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogWarning($"HTTP trigger function {nameof(UpdateRuleHistory)} received a request.");
