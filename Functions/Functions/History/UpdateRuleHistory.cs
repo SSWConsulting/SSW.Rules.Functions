@@ -41,19 +41,19 @@ namespace SSW.Rules.Functions.Functions.History
                     await _dbContext.RuleHistoryCache.Add(new RuleHistoryCache
                     {
                         MarkdownFilePath = historyEntry.file,
-                        ChangedAtDateTime = historyEntry.lastUpdated,
+                        ChangedAtDateTime = DateTime.Parse(historyEntry.lastUpdated),
                         ChangedByDisplayName = historyEntry.lastUpdatedBy,
                         ChangedByEmail = historyEntry.lastUpdatedByEmail,
-                        CreatedAtDateTime = historyEntry.created,
+                        CreatedAtDateTime = DateTime.Parse(historyEntry.created),
                         CreatedByDisplayName = historyEntry.createdBy,
                         CreatedByEmail = historyEntry.createdByEmail
                     });
                 } else
                 {
-                    historyCache.ChangedAtDateTime = historyEntry.lastUpdated;
+                    historyCache.ChangedAtDateTime = DateTime.Parse(historyEntry.lastUpdated);
                     historyCache.ChangedByDisplayName = historyEntry.lastUpdatedBy;
                     historyCache.ChangedByEmail = historyEntry.lastUpdatedByEmail;
-                    historyCache.CreatedAtDateTime = historyEntry.created;
+                    historyCache.CreatedAtDateTime = DateTime.Parse(historyEntry.created);
                     historyCache.CreatedByDisplayName = historyEntry.createdBy;
                     historyCache.CreatedByEmail = historyEntry.createdByEmail;
 
