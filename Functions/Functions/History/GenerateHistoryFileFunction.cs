@@ -38,10 +38,9 @@ namespace SSW.Rules.Functions.Functions
                     lastUpdated = history.ChangedAtDateTime,
                     lastUpdatedBy = history.ChangedByDisplayName,
                     lastUpdatedByEmail = history.ChangedByEmail,
-
-                    created = history.ChangedAtDateTime,
-                    createdBy = history.ChangedByDisplayName,
-                    createdByEmail = history.ChangedByEmail
+                    created = history.CreatedAtDateTime,
+                    createdBy = history.CreatedByDisplayName,
+                    createdByEmail = history.CreatedByEmail
                 });
             }
 
