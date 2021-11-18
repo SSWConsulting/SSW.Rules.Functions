@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System;
+using System.Globalization;
 
 namespace SSW.Rules.Functions.Functions
 {
@@ -37,10 +38,10 @@ namespace SSW.Rules.Functions.Functions
                 ruleHistory.Add(new RuleHistoryData
                 {
                     file = history.MarkdownFilePath,
-                    lastUpdated = history.ChangedAtDateTime.ToString(dateFormat),
+                    lastUpdated = history.ChangedAtDateTime.ToString(dateFormat, CultureInfo.InvariantCulture),
                     lastUpdatedBy = history.ChangedByDisplayName,
                     lastUpdatedByEmail = history.ChangedByEmail,
-                    created = history.CreatedAtDateTime.ToString(dateFormat),
+                    created = history.CreatedAtDateTime.ToString(dateFormat, CultureInfo.InvariantCulture),
                     createdBy = history.CreatedByDisplayName,
                     createdByEmail = history.CreatedByEmail
                 });
