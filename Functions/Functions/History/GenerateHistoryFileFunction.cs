@@ -14,6 +14,7 @@ namespace SSW.Rules.Functions.Functions
     public class GenerateHistoryFileFunction
     {
         private readonly RulesDbContext _dbContext;
+        private const string dateFormat = "yyyy-MM-ddTHH:mm:sszzz";
 
         public GenerateHistoryFileFunction(RulesDbContext dbContext)
         {
@@ -36,10 +37,10 @@ namespace SSW.Rules.Functions.Functions
                 ruleHistory.Add(new RuleHistoryData
                 {
                     file = history.MarkdownFilePath,
-                    lastUpdated = history.ChangedAtDateTime.ToString("yyyy-MM-ddTHH:mm:sszzz"),
+                    lastUpdated = history.ChangedAtDateTime.ToString(dateFormat),
                     lastUpdatedBy = history.ChangedByDisplayName,
                     lastUpdatedByEmail = history.ChangedByEmail,
-                    created = history.CreatedAtDateTime.ToString("yyyy-MM-ddTHH:mm:sszzz"),
+                    created = history.CreatedAtDateTime.ToString(dateFormat),
                     createdBy = history.CreatedByDisplayName,
                     createdByEmail = history.CreatedByEmail
                 });
