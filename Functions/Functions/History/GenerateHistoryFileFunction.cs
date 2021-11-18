@@ -7,12 +7,15 @@ using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System;
+using System.Globalization;
 
 namespace SSW.Rules.Functions.Functions
 {
     public class GenerateHistoryFileFunction
     {
         private readonly RulesDbContext _dbContext;
+        private const string dateFormat = "yyyy-MM-ddTHH:mm:sszzz";
 
         public GenerateHistoryFileFunction(RulesDbContext dbContext)
         {
@@ -35,10 +38,10 @@ namespace SSW.Rules.Functions.Functions
                 ruleHistory.Add(new RuleHistoryData
                 {
                     file = history.MarkdownFilePath,
-                    lastUpdated = history.ChangedAtDateTime,
+                    lastUpdated = history.ChangedAtDateTime.ToString(dateFormat, CultureInfo.InvariantCulture),
                     lastUpdatedBy = history.ChangedByDisplayName,
                     lastUpdatedByEmail = history.ChangedByEmail,
-                    created = history.CreatedAtDateTime,
+                    created = history.CreatedAtDateTime.ToString(dateFormat, CultureInfo.InvariantCulture),
                     createdBy = history.CreatedByDisplayName,
                     createdByEmail = history.CreatedByEmail
                 });

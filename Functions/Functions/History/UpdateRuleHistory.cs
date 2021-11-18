@@ -9,12 +9,15 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 
 namespace SSW.Rules.Functions.Functions.History
 {
     public class UpdateRuleHistory
     {
         private readonly RulesDbContext _dbContext;
+        private readonly CultureInfo provider = CultureInfo.InvariantCulture;
+        private const string dateFormat = "yyyy-MM-ddTHH:mm:sszzz";
 
         public UpdateRuleHistory(RulesDbContext dbContext)
         {
@@ -41,19 +44,19 @@ namespace SSW.Rules.Functions.Functions.History
                     await _dbContext.RuleHistoryCache.Add(new RuleHistoryCache
                     {
                         MarkdownFilePath = historyEntry.file,
-                        ChangedAtDateTime = historyEntry.lastUpdated,
+                        ChangedAtDateTime = DateTime.ParseExact(historyEntry.lastUpdated, dateFormat, provider),
                         ChangedByDisplayName = historyEntry.lastUpdatedBy,
                         ChangedByEmail = historyEntry.lastUpdatedByEmail,
-                        CreatedAtDateTime = historyEntry.created,
+                        CreatedAtDateTime = DateTime.ParseExact(historyEntry.created, dateFormat, provider),
                         CreatedByDisplayName = historyEntry.createdBy,
                         CreatedByEmail = historyEntry.createdByEmail
                     });
                 } else
                 {
-                    historyCache.ChangedAtDateTime = historyEntry.lastUpdated;
+                    historyCache.ChangedAtDateTime = DateTime.ParseExact(historyEntry.lastUpdated, dateFormat, provider);
                     historyCache.ChangedByDisplayName = historyEntry.lastUpdatedBy;
                     historyCache.ChangedByEmail = historyEntry.lastUpdatedByEmail;
-                    historyCache.CreatedAtDateTime = historyEntry.created;
+                    historyCache.CreatedAtDateTime = DateTime.ParseExact(historyEntry.created, dateFormat, provider);
                     historyCache.CreatedByDisplayName = historyEntry.createdBy;
                     historyCache.CreatedByEmail = historyEntry.createdByEmail;
 
