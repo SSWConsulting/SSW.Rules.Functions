@@ -18,15 +18,15 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      working-directory: Functions/
+      working-directory: SSW.Rules.AzFuncs/
       run: dotnet restore
 
     - name: Build
-      working-directory: Functions/
+      working-directory: SSW.Rules.AzFuncs/
       run: dotnet build --no-restore
 
     - name: Deploy
-      working-directory: Functions/
+      working-directory: SSW.Rules.AzFuncs/
       run: |
         dotnet publish \
           --configuration Release \
