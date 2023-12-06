@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OidcApiAuthorization.Abstractions;
 using OidcApiAuthorization.Models;
 
-namespace OidcApiAuthorization
-{
-    /// <summary>
+namespace OidcApiAuthorization;
+
+ /// <summary>
     /// Encapsulates checks of OpenID Connect (OIDC) Authorization tokens in HTTP request headers.
     /// </summary>
     public class OidcApiAuthorizationService : IApiAuthorization
@@ -171,4 +168,3 @@ namespace OidcApiAuthorization
             return new HealthCheckResult(); // Good health.
         }
     }
-}

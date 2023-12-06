@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using OidcApiAuthorization.Abstractions;
+using OidcApiAuthorization.Models;
 
-namespace OidcApiAuthorization
-{
-    public class OidcConfigurationManager : IOidcConfigurationManager
+namespace OidcApiAuthorization;
+
+ public class OidcConfigurationManager : IOidcConfigurationManager
     {
         private readonly ConfigurationManager<OpenIdConnectConfiguration> _configurationManager;
 
@@ -71,4 +69,3 @@ namespace OidcApiAuthorization
             _configurationManager.RequestRefresh();
         }
     }
-}

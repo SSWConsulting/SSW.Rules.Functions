@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSW.Rules.AzFuncs", "SSW.Rules.AzFuncs\SSW.Rules.AzFuncs.csproj", "{AB73900D-A66A-47E1-8605-292D97F3C61D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OidcApiAuthorization", "OidcApiAuthorization\OidcApiAuthorization.csproj", "{BFFFB0FA-D784-4840-95F3-8E9C855E8FAB}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Azure", "Azure\Azure.fsproj", "{23EC6A61-47FA-4A0A-9D91-5CA2F0AADBE6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB73900D-A66A-47E1-8605-292D97F3C61D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB73900D-A66A-47E1-8605-292D97F3C61D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB73900D-A66A-47E1-8605-292D97F3C61D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB73900D-A66A-47E1-8605-292D97F3C61D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFFFB0FA-D784-4840-95F3-8E9C855E8FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFFFB0FA-D784-4840-95F3-8E9C855E8FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFFFB0FA-D784-4840-95F3-8E9C855E8FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFFFB0FA-D784-4840-95F3-8E9C855E8FAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23EC6A61-47FA-4A0A-9D91-5CA2F0AADBE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23EC6A61-47FA-4A0A-9D91-5CA2F0AADBE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23EC6A61-47FA-4A0A-9D91-5CA2F0AADBE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23EC6A61-47FA-4A0A-9D91-5CA2F0AADBE6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
