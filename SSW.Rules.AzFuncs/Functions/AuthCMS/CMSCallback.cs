@@ -12,7 +12,8 @@ public class CmsCallback(ILoggerFactory loggerFactory)
 {
     private readonly ILogger _logger = loggerFactory.CreateLogger<CmsCallback>();
 
-    //NetlifyCallback
+    // TODO: Find where this is called and update the name 
+    // Old name: NetlifyCallback
     [Function("CMSCallback")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "callback")] HttpRequestData req,

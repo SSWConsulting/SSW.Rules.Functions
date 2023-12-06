@@ -10,7 +10,8 @@ public class AuthenticateCms(ILoggerFactory loggerFactory)
 {
     private readonly ILogger _logger = loggerFactory.CreateLogger<AuthenticateCms>();
 
-    //AuthenticateNetlify
+    // TODO: Find where this is called and update the name 
+    // Old name: AuthenticateNetlify
     [Function("AuthenticateCMS")]
     public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "auth")] HttpRequestData req,
         FunctionContext executionContext)
