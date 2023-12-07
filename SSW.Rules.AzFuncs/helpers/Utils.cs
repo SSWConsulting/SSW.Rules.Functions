@@ -1,12 +1,16 @@
 using System.Collections.Specialized;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using Microsoft.Azure.Functions.Worker.Http;
 using Newtonsoft.Json;
+using SSW.Rules.AzFuncs.Domain;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace SSW.Rules.AzFuncs.helpers;
 
-public static class Utils
+public static partial class Utils
 {
     /// <summary>
     /// Simple Json Object { error: bool, message: string }
@@ -61,4 +65,34 @@ public static class Utils
         return parsedForm;
     }
 
+    public static FrontMatter? ParseFrontMatter(string markdownContent)
+    {
+        // Regular expression to extract the YAML front matter
+        var frontMatterRegex = FrontmatterRegex();
+        var match = frontMatterRegex.Match(markdownContent);
+
+        if (!match.Success) return null; // No front matter found
+
+        var frontMatterYaml = match.Groups[1].Value;
+
+        // Deserializer for YAML
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+
+        // Deserialize YAML to FrontMatter object
+        try
+        {
+            return deserializer.Deserialize<FrontMatter>(frontMatterYaml);
+        }
+        catch (Exception ex)
+        {
+            // Handle parsing error
+            Console.WriteLine("Error parsing YAML: " + ex.Message);
+            return null;
+        }
+    }
+
+    [GeneratedRegex(@"^---\s+(.*?)\s+---", RegexOptions.Singleline)]
+    private static partial Regex FrontmatterRegex();
 }
