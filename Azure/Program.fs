@@ -5,6 +5,8 @@ open Farmer.Builders
 let audience = Environment.GetEnvironmentVariable  "AUTH0_AUDIENCE"
 let issuer = Environment.GetEnvironmentVariable  "AUTH0_ISSUER"
 let mutable namePrefix = Environment.GetEnvironmentVariable "AZURE_RG_PREFIX"
+let gitHubToken = Environment.GetEnvironmentVariable "GITHUB_TOKEN" 
+
 
 if isNull namePrefix then
     namePrefix <- "sswrules-local"
@@ -22,7 +24,9 @@ let myCosmosDb = cosmosDb {
 // 2. Create a Functions App
 printfn "Creating Functions App"
 let myFunctions = functions {
+    use_runtime DotNetIsolated
     name (namePrefix + "-functions")
+    setting "GitHub:Token" gitHubToken
     setting "OidcApiAuthorizationSettings:Audience" audience
     setting "OidcApiAuthorizationSettings:IssuerUrl" issuer
     setting "CosmosDb:Account" myCosmosDb.Endpoint
