@@ -55,7 +55,6 @@ public class BookmarkRuleFunction(
 
         if (model == null)
         {
-            // model = await _client.Bookmarks.Add(data);
             var response = await dbContext.Bookmarks.Add(data);
             if (response.IsDefined())
             {

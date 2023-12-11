@@ -17,7 +17,7 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
 
     [Function("UpdateLatestRules")]
     public async Task<HttpResponseData> Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
         HttpRequestData req,
         FunctionContext executionContext)
     {

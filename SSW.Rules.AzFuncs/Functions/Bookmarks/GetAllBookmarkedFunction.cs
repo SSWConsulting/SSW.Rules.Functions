@@ -17,7 +17,8 @@ public class GetAllBookmarkedFunction(
 
     [Function("GetAllBookmarkedFunction")]
     public async Task<HttpResponseData> Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequestData req,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
+        HttpRequestData req,
         FunctionContext executionContext)
     {
         _logger.LogWarning($"HTTP trigger function {nameof(GetAllBookmarkedFunction)} received a request.");
@@ -36,7 +37,6 @@ public class GetAllBookmarkedFunction(
         _logger.LogInformation("Checking for bookmarks by user: {0}", userId);
 
         var bookmarks = await dbContext.Bookmarks.Query<Bookmark>(q => q.Where(w => w.UserId == userId));
-        // var userBookMarks = await bookmarks.Get<Bookmark>(q => q.UserId == userId);
 
         var bookmarksResult = bookmarks.ToList();
         if (bookmarksResult.Count != 0)

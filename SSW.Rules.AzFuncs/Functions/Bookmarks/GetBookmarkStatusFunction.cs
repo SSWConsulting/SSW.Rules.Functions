@@ -44,7 +44,7 @@ public class GetBookmarkStatusFunction(ILoggerFactory loggerFactory, RulesDbCont
         _logger.LogInformation("Checking for bookmark on rule: {0} and user: {1}", ruleGuid, userId);
         var bookmarks =
             await dbContext.Bookmarks.Query(q => q.Where(w => w.RuleGuid == ruleGuid && w.UserId == userId));
-        // var ruleBookMarks = await bookmarks.Get<Bookmark>(q => q.RuleGuid == ruleGuid && q.UserId == userId);
+        
         if (bookmarks.Any())
         {
             return req.CreateJsonResponse(new
