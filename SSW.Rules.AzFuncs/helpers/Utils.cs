@@ -57,6 +57,24 @@ public static partial class Utils
         return response;
     }
 
+    
+    /// <summary>
+    /// Create a JSON object response 
+    /// </summary>
+    /// <param name="req"></param>
+    /// <param name="statusCode">Default 200</param>
+    /// <param name="message">Default empty</param>
+    /// <returns></returns>
+    public static async Task<HttpResponseData> SendJsonResponse(this HttpRequestData req, string message, HttpStatusCode statusCode = HttpStatusCode.OK)
+    {
+
+        var response = req.CreateResponse(statusCode);
+        response.Headers.Add("Content-Type", "application/json");
+        response.StatusCode = statusCode;
+        await response.WriteStringAsync(message);
+        return response;
+    }
+    
     public static async Task<NameValueCollection> ReadFormDataAsync(this HttpRequestData req)
     {
         using var reader = new StreamReader(req.Body);

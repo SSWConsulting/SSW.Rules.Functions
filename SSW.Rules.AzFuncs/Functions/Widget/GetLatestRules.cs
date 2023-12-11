@@ -34,7 +34,7 @@ public class GetLatestRules(ILoggerFactory loggerFactory, RulesDbContext context
 
         var filteredRulesList = filteredRules.ToList();
         return filteredRulesList.Count == 0
-            ? req.CreateJsonErrorResponse(HttpStatusCode.NotFound)
+            ? req.CreateJsonErrorResponse(HttpStatusCode.NotFound, "Not Found")
             : req.CreateJsonResponse(filteredRules);
     }
 }

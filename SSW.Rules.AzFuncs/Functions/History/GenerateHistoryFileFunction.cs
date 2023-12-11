@@ -38,7 +38,6 @@ public class GenerateHistoryFileFunction(ILoggerFactory loggerFactory, RulesDbCo
         }));
 
         var responseMessage = JsonConvert.SerializeObject(ruleHistory);
-
-        return req.CreateJsonResponse(responseMessage);
+        return await req.SendJsonResponse(responseMessage);
     }
 }

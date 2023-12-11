@@ -1,0 +1,35 @@
+@BaseApiUrl = http://localhost:7071/api
+
+# Health
+GET {{BaseApiUrl}}/HealthCheckFunction
+Content-Type: application/json
+
+###
+# History - Generate
+GET {{BaseApiUrl}}/GenerateHistoryFileFunction
+Content-Type: application/json
+
+###
+# History - SyncCommitHash
+GET {{BaseApiUrl}}/GetHistorySyncCommitHash
+Content-Type: application/json
+
+
+###
+# Widget - Get LatestRules (with GitHub)
+@skip = 0
+@take = 10
+@githubUsername = ""
+
+GET {{BaseApiUrl}}/GetLatestRules?skip={{skip}}&take={{take}}&githubUsername={{githubUsername}}
+Content-Type: application/json
+
+###
+# Widget - Get LatestRules (No GitHub)
+
+GET {{BaseApiUrl}}/GetLatestRules?skip={{skip}}&take={{take}}
+Content-Type: application/json
+
+
+###
+# Widget - Update LatestRules
