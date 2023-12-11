@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "SSW.Rules.AzFuncs": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7248",
+      "launchBrowser": false
+    }
+  }
+}

@@ -9,27 +9,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # TODO: also use ARM paramaters
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET 3.1.x
+    - name: Setup .NET 8.0.x
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.x
+        dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      working-directory: Functions/
+      working-directory: SSW.Rules.AzFuncs/
       run: dotnet restore
 
     - name: Build
-      working-directory: Functions/
+      working-directory: SSW.Rules.AzFuncs/
       run: dotnet build --no-restore
 
     - name: Deploy
-      working-directory: Functions/
-      run: dotnet publish
-        --configuration Release
-        --output ../deploy
+      working-directory: SSW.Rules.AzFuncs/
+      run: |
+        dotnet publish \
+          --configuration Release \
+          --output ../deploy
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.1
@@ -43,10 +43,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET 5.0.x
+    - name: Setup .NET 8.0.x
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 8.0.x
 
     - name: Generate ARM Template
       working-directory: Azure/
@@ -97,10 +97,10 @@ jobs:
         resourceGroupName: ${{ secrets.AZURE_RG }}
         template: arm-template.json
 
-    - name: Setup .NET 3.1.x
+    - name: Setup .NET 8.0.x
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.x
+        dotnet-version: 8.0.x
 
     - name: Login with Azure CLI
       uses: azure/login@v1
