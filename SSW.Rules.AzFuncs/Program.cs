@@ -24,7 +24,7 @@ var host = new HostBuilder()
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
         services.AddOidcApiAuthorization();
-        services.AddSingleton<GitHubClient>(serviceProvider =>
+        services.AddSingleton<IGitHubClient>(serviceProvider =>
         {
             var client = new GitHubClient(new ProductHeaderValue("SSW.Rules"));
             var githubToken = configurationRoot["GitHub:Token"]; 
