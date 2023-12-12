@@ -33,3 +33,6 @@ Content-Type: application/json
 
 ###
 # Widget - Update LatestRules
+
+POST {{BaseApiUrl}}/UpdateLatestRules
+Content-Type: application/json
