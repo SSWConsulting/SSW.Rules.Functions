@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Octokit;
-using Octokit.Internal;
 using SSW.Rules.AzFuncs.Domain;
 using SSW.Rules.AzFuncs.helpers;
 using SSW.Rules.AzFuncs.Persistence;
@@ -24,7 +22,6 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
         _logger.LogInformation("Processing UpdateLatestRules request.");
         try
         {
-
             // TODO: Get these from the ENV
             const string repositoryOwner = "SSWConsulting";
             const string repositoryName = "SSW.Rules.Content";
@@ -35,7 +32,7 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
             var apiOptions = new ApiOptions
             {
                 PageSize = 50,
-                PageCount = 1, // Only retrieve the first page of results
+                PageCount = 1,
                 StartPage = 1
             };
 
@@ -46,6 +43,7 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
             var existingCommitHashes = new HashSet<string>(syncHistory.Select(sh => sh.CommitHash));
             HttpClient httpClient = new HttpClient();
             var newRules = new List<LatestRules>();
+            var updatedCount = 0;
             foreach (var pr in pullRequests)
             {
                 if (existingCommitHashes.Contains(pr.MergeCommitSha)) break;
@@ -54,51 +52,34 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
                 var files = await gitHubClient.PullRequest.Files(repositoryOwner, repositoryName, pr.Number);
                 foreach (var file in files)
                 {
-                    if (file.FileName.Contains("rule.md"))
+                    if (!file.FileName.Contains("rule.md")) continue;
+
+                    var response = await httpClient.GetAsync(file.RawUrl);
+                    if (!response.IsSuccessStatusCode) continue;
+
+                    var fileContent = await response.Content.ReadAsStringAsync();
+                    var frontMatter = Utils.ParseFrontMatter(fileContent);
+
+                    if (frontMatter is null) continue;
+
+                    var ruleHistoryCache = await context.RuleHistoryCache.Query(rhc =>
+                        rhc.Where(w => w.MarkdownFilePath == file.FileName));
+                    var foundRule = ruleHistoryCache.FirstOrDefault();
+
+                    var searchLatest =
+                        await context.LatestRules.Query(q => q.Where(w => w.RuleGuid == frontMatter.Guid));
+                    var latestFound = searchLatest.FirstOrDefault();
+
+                    if (latestFound is not null)
                     {
-                        var response = await httpClient.GetAsync(file.RawUrl);
-                        if (!response.IsSuccessStatusCode) continue;
-
-                        var fileContent = await response.Content.ReadAsStringAsync();
-                        var frontMatter = Utils.ParseFrontMatter(fileContent);
-
-                        if (frontMatter is null) continue;
-
-                        var ruleHistoryCache = await context.RuleHistoryCache.Query(rhc =>
-                            rhc.Where(w => w.MarkdownFilePath == file.FileName));
-                        var foundRule = ruleHistoryCache.FirstOrDefault();
-
-                        if (foundRule is not null)
-                        {
-                            var rule = new LatestRules
-                            {
-                                CommitHash = pr.MergeCommitSha,
-                                RuleUri = frontMatter.Uri,
-                                RuleName = frontMatter.Title,
-                                CreatedAt = foundRule.CreatedAtDateTime,
-                                UpdatedAt = pr.UpdatedAt.UtcDateTime,
-                                CreatedBy = foundRule.CreatedByDisplayName,
-                                UpdatedBy = foundRule.ChangedByDisplayName,
-                                GitHubUsername = pr.User.Login
-                            };
-                            newRules.Add(rule);
-                        }
-                        else
-                        {
-                            var rule = new LatestRules
-                            {
-                                CommitHash = pr.MergeCommitSha,
-                                RuleUri = frontMatter.Uri,
-                                RuleName = frontMatter.Title,
-                                CreatedAt = frontMatter.Created,
-                                UpdatedAt = pr.UpdatedAt.UtcDateTime,
-                                CreatedBy = pr.User.Location,
-                                UpdatedBy = pr.User.Login,
-                                GitHubUsername = pr.User.Login
-                            };
-                            newRules.Add(rule);
-                        }
+                        UpdateLatestRule(latestFound, pr, frontMatter);
+                        updatedCount++;
+                        continue;
                     }
+
+                    var rule = CreateLatestRule(pr, frontMatter, foundRule);
+                    newRules.Add(rule);
+                    updatedCount++;
                 }
             }
 
@@ -107,16 +88,45 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
                 await context.LatestRules.Add(rule);
             }
 
-            _logger.LogInformation($"Updated Latest rules with {newRules.Count} new entries.");
+            _logger.LogInformation($"Updated Latest rules with {updatedCount} new entries.");
 
             return req.CreateJsonResponse(new
-                { message = $"Latest rules updated successfully with {newRules.Count} new entries." });
-
+                { message = $"Latest rules updated successfully with {updatedCount} new entries." });
         }
         catch (Exception ex)
         {
             _logger.LogError($"Something went wrong: {ex.Message}");
             return req.CreateJsonErrorResponse(HttpStatusCode.BadRequest, ex.Message);
         }
+    }
+
+    private void UpdateLatestRule(LatestRules latestRule, PullRequest pr, FrontMatter frontMatter)
+    {
+        latestRule.CommitHash = pr.MergeCommitSha;
+        latestRule.RuleUri = frontMatter.Uri;
+        latestRule.RuleName = frontMatter.Title;
+        latestRule.UpdatedAt = pr.UpdatedAt.UtcDateTime;
+        latestRule.UpdatedBy = pr.User.Login;
+        latestRule.GitHubUsername = pr.User.Login;
+
+        context.LatestRules.Update(latestRule);
+    }
+
+    private static LatestRules CreateLatestRule(PullRequest pr, FrontMatter frontMatter, RuleHistoryCache? foundRule)
+    {
+        var rule = new LatestRules
+        {
+            CommitHash = pr.MergeCommitSha,
+            RuleGuid = frontMatter.Guid,
+            RuleUri = frontMatter.Uri,
+            RuleName = frontMatter.Title,
+            CreatedAt = foundRule?.CreatedAtDateTime ?? frontMatter.Created,
+            UpdatedAt = pr.UpdatedAt.UtcDateTime,
+            CreatedBy = foundRule?.CreatedByDisplayName ?? pr.User.Location,
+            UpdatedBy = foundRule?.ChangedByDisplayName ?? pr.User.Login,
+            GitHubUsername = pr.User.Login
+        };
+
+        return rule;
     }
 }
