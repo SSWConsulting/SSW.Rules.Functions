@@ -10,7 +10,7 @@ public class FrontMatter
     public string ArchivedReason { get; set; }
 
     public string Title { get; set; }
-    public Guid Guid { get; set; }
+    public string Guid { get; set; }
     public string Uri { get; set; }
     public DateTime Created { get; set; }
     public List<Author> Authors { get; set; }
