@@ -6,7 +6,7 @@ public class LatestRules : BaseEntity
 {
     public string CommitHash { get; set; }
     public string RuleUri { get; set; }
-    public Guid RuleGuid { get; set; }
+    public string RuleGuid { get; set; }
     public string RuleName { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

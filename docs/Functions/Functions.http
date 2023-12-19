@@ -19,7 +19,7 @@ Content-Type: application/json
 # Widget - Get LatestRules (with GitHub)
 @skip = 0
 @take = 10
-@githubUsername = ""
+@githubUsername = "BrookJeynes"
 
 GET {{BaseApiUrl}}/GetLatestRules?skip={{skip}}&take={{take}}&githubUsername={{githubUsername}}
 Content-Type: application/json

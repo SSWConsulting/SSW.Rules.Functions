@@ -21,13 +21,14 @@ public class GetLatestRules(ILoggerFactory loggerFactory, RulesDbContext context
         var query = HttpUtility.ParseQueryString(req.Url.Query);
         var skip = int.Parse(query["skip"] ?? "0");
         var take = int.Parse(query["take"] ?? "10");
-        var githubUsername = query["githubUsername"];
+        var githubUsername = query["githubUsername"].Trim('\"');
 
         _logger.LogInformation($"Fetching latest rules, Skip: {skip}, Take: {take}, GitHubUsername: {githubUsername}");
 
         var rules = await context.LatestRules.GetAll();
         var filteredRules = rules
-            .Where(r => string.IsNullOrEmpty(githubUsername) || r.CreatedBy == githubUsername)
+            .Where(r => string.IsNullOrEmpty(githubUsername) || r.GitHubUsername == githubUsername ||
+                        r.CreatedBy == githubUsername || r.UpdatedBy == githubUsername)
             .OrderByDescending(r => r.UpdatedAt)
             .Skip(skip)
             .Take(take);
