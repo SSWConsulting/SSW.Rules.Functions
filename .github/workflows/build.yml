@@ -57,6 +57,8 @@ jobs:
           AUTH0_ISSUER: ${{ secrets.AUTH0_ISSUER }}
           AZURE_RG_PREFIX: ${{ secrets.AZURE_RG_PREFIX }}
           GITHUB_TOKEN: ${{ secrets.AZ_FUNC_GITHUB_PAT}}
+          CMS_OAUTH_CLIENT_ID: ${{ secrets.CMS_OAUTH_CLIENT_ID }}
+          CMS_OAUTH_CLIENT_SECRET: ${{ secrets.CMS_OAUTH_CLIENT_SECRET }}
 
     - name: Login with Azure CLI
       uses: azure/login@v1
