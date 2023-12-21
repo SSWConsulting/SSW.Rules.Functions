@@ -50,13 +50,14 @@ public class BookmarkRuleFunction(
         var results =
         await dbContext.Bookmarks.Query(q => q.Where(w => w.RuleGuid == data.RuleGuid && w.UserId == data.UserId));
 
+        var environment = Environment.GetEnvironmentVariable("AZURE_FUNCTIONS_ENVIRONMENT");
 
         var model = results.FirstOrDefault();
 
         if (model == null)
         {
             var response = await dbContext.Bookmarks.Add(data);
-            if (response.IsDefined())
+            if (environment.Equals("Development", StringComparison.OrdinalIgnoreCase) || response.IsDefined())
             {
                 model = response;
                 _logger.LogInformation("Added new bookmark on rule. Id: {0}", model.Id);
