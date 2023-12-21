@@ -109,7 +109,7 @@ Authorization: Bearer {{Token}}
 ###
 # User - GetUserFunction
 GET {{BaseApiUrl}}/GetUserFunction?user_id={{UserId}}
-Authorization: Bearer {{Token
+Authorization: Bearer {{Token}}
 
 ###
 # User - GetOrganisationsFunction
