@@ -29,10 +29,6 @@ public class CmsCallback(ILoggerFactory loggerFactory)
             if (string.IsNullOrEmpty(code))
             {
                 _logger.LogError("Missing code param");
-                //return new BadRequestObjectResult(new
-                //{
-                //    message = "Missing code param",
-                //});
                 return req.CreateJsonResponse(new
                 {
                     error = true,
@@ -100,8 +96,6 @@ public class CmsCallback(ILoggerFactory loggerFactory)
                     window.opener.postMessage(""authorizing:github"", ""*"");
                 })()
                 </script>";
-
-            //return new ContentResult { Content = script, ContentType = "text/html" };
 
             var res = req.CreateResponse(HttpStatusCode.OK);
             res.Headers.Add("Content-Type", "text/html");
