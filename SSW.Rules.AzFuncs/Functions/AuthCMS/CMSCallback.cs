@@ -1,10 +1,13 @@
 using System.Configuration;
+using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using SSW.Rules.AzFuncs.helpers;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace SSW.Rules.AzFuncs.Functions.AuthCMS;
 
@@ -14,7 +17,7 @@ public class CmsCallback(ILoggerFactory loggerFactory)
 
     // TODO: Find where this is called and update the name to be generic 
     [Function("NetlifyCallback")]
-    public async Task<IActionResult> Run(
+    public async Task<HttpResponseData> Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "callback")] HttpRequestData req,
         FunctionContext executionContext)
     {
@@ -26,10 +29,15 @@ public class CmsCallback(ILoggerFactory loggerFactory)
             if (string.IsNullOrEmpty(code))
             {
                 _logger.LogError("Missing code param");
-                return new BadRequestObjectResult(new
+                //return new BadRequestObjectResult(new
+                //{
+                //    message = "Missing code param",
+                //});
+                return req.CreateJsonResponse(new
                 {
+                    error = true,
                     message = "Missing code param",
-                });
+                }, HttpStatusCode.BadRequest);
             }
 
             const string tokenUrl = "https://github.com/login/oauth/access_token";
@@ -93,7 +101,12 @@ public class CmsCallback(ILoggerFactory loggerFactory)
                 })()
                 </script>";
 
-            return new ContentResult { Content = script, ContentType = "text/html" };
+            //return new ContentResult { Content = script, ContentType = "text/html" };
+
+            var res = req.CreateResponse(HttpStatusCode.OK);
+            res.Headers.Add("Content-Type", "text/html");
+            res.WriteString(script);
+            return res;
         }
         catch (HttpRequestException ex)
         {
