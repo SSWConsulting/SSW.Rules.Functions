@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using Microsoft.Azure.Functions.Worker.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using SSW.Rules.AzFuncs.Domain;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -51,7 +52,10 @@ public static partial class Utils
         response.Headers.Add("Content-Type", "application/json");
         response.StatusCode = statusCode;
 
-        var jsonContent = JsonConvert.SerializeObject(message);
+        var jsonContent = JsonConvert.SerializeObject(message, new JsonSerializerSettings
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
+        });
         response.WriteString(jsonContent);
 
         return response;

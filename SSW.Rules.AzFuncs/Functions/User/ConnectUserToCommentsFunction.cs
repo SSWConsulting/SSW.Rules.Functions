@@ -12,20 +12,20 @@ using DomainUser = SSW.Rules.AzFuncs.Domain.User;
 
 namespace SSW.Rules.AzFuncs.Functions.User;
 
-public class ConnectUserToCommentsFunction(
+public class ConnectUserCommentsFunction(
     ILoggerFactory loggerFactory,
     RulesDbContext dbContext,
     IApiAuthorization apiAuthorization)
 {
-    private readonly ILogger _logger = loggerFactory.CreateLogger<ConnectUserToCommentsFunction>();
+    private readonly ILogger _logger = loggerFactory.CreateLogger<ConnectUserCommentsFunction>();
 
-    [Function("ConnectUserToCommentsFunction")]
+    [Function("ConnectUserCommentsFunction")]
     public async Task<HttpResponseData> Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
         HttpRequestData req,
         FunctionContext executionContext)
     {
-        _logger.LogWarning($"HTTP trigger function {nameof(ConnectUserToCommentsFunction)} received a request.");
+        _logger.LogWarning($"HTTP trigger function {nameof(ConnectUserCommentsFunction)} received a request.");
 
         ApiAuthorizationResult authorizationResult =
             await apiAuthorization.AuthorizeAsync(Converters.ConvertToIHeaderDictionary(req.Headers));
@@ -36,7 +36,7 @@ public class ConnectUserToCommentsFunction(
             return req.CreateResponse(HttpStatusCode.Unauthorized);
         }
 
-        _logger.LogWarning($"HTTP trigger function {nameof(ConnectUserToCommentsFunction)} request is authorized.");
+        _logger.LogWarning($"HTTP trigger function {nameof(ConnectUserCommentsFunction)} request is authorized.");
 
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         var data = JsonConvert.DeserializeObject<DomainUser>(requestBody);
