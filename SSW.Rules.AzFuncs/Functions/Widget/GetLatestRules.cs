@@ -29,6 +29,8 @@ public class GetLatestRules(ILoggerFactory loggerFactory, RulesDbContext context
         var filteredRules = rules
             .Where(r => string.IsNullOrEmpty(githubUsername) || r.GitHubUsername == githubUsername ||
                         r.CreatedBy == githubUsername || r.UpdatedBy == githubUsername)
+            .GroupBy(r => r.RuleGuid)
+            .Select(group => group.First())
             .OrderByDescending(r => r.UpdatedAt)
             .Skip(skip)
             .Take(take);
