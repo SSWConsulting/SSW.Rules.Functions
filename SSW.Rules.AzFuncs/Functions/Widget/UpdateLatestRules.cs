@@ -91,7 +91,7 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
             _logger.LogInformation($"Updated Latest rules with {updatedCount} new entries.");
 
             return req.CreateJsonResponse(new
-                { message = $"Latest rules updated successfully with {updatedCount} new entries." });
+            { message = $"Latest rules updated successfully with {updatedCount} new entries." });
         }
         catch (Exception ex)
         {
@@ -108,6 +108,7 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
         latestRule.UpdatedAt = pr.UpdatedAt.UtcDateTime;
         latestRule.UpdatedBy = pr.User.Login;
         latestRule.GitHubUsername = pr.User.Login;
+        latestRule.ArchivedReason = string.IsNullOrEmpty(frontMatter.ArchivedReason) ? null : frontMatter.ArchivedReason;
 
         context.LatestRules.Update(latestRule);
     }
@@ -124,7 +125,8 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
             UpdatedAt = pr.UpdatedAt.UtcDateTime,
             CreatedBy = foundRule?.CreatedByDisplayName ?? pr.User.Location,
             UpdatedBy = foundRule?.ChangedByDisplayName ?? pr.User.Login,
-            GitHubUsername = pr.User.Login
+            GitHubUsername = pr.User.Login,
+            ArchivedReason = string.IsNullOrEmpty(frontMatter.ArchivedReason) ? null : frontMatter.ArchivedReason,
         };
 
         return rule;
