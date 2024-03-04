@@ -31,6 +31,7 @@ public class GetLatestRules(ILoggerFactory loggerFactory, RulesDbContext context
                         r.CreatedBy == githubUsername || r.UpdatedBy == githubUsername)
             .GroupBy(r => r.RuleGuid)
             .Select(group => group.First())
+            .Where(r => r.ArchivedReason is not null)
             .OrderByDescending(r => r.UpdatedAt)
             .Skip(skip)
             .Take(take);
