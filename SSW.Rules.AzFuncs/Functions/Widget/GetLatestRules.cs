@@ -32,6 +32,7 @@ public class GetLatestRules(ILoggerFactory loggerFactory, RulesDbContext context
             .GroupBy(r => r.RuleGuid)
             .Select(group => group.First())
             .Where(r => r.ArchivedReason is not null)
+            .DistinctBy(r => r.RuleGuid)
             .OrderByDescending(r => r.UpdatedAt)
             .Skip(skip)
             .Take(take);
