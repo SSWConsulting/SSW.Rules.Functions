@@ -36,8 +36,6 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
                 StartPage = 1
             };
 
-            _logger.LogInformation("Getting pull requests");
-
             var pullRequests =
                 await gitHubClient.PullRequest.GetAllForRepository(repositoryOwner, repositoryName, request,
                     apiOptions);
@@ -47,7 +45,6 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
                 throw new Exception("No Pull Requests found");
             }
 
-            _logger.LogInformation("Getting sync history hash");
             var syncHistoryHash = await context.SyncHistory.GetAll();
             var existingCommitHashes = new HashSet<string>(syncHistoryHash.Select(sh => sh.CommitHash));
             HttpClient httpClient = new HttpClient();
@@ -60,18 +57,11 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
                 _logger.LogInformation($"Scanning PR {pr.Number}");
                 if (existingCommitHashes.Contains(pr.MergeCommitSha)) break;
                 if (!pr.Merged) continue;
-                _logger.LogInformation($"PR {pr.Number} - changed files {pr.ChangedFiles}");
-                _logger.LogInformation($"Too big? {pr.ChangedFiles > 100}");
-                if (pr.ChangedFiles > 100) // Skips big PRs as these will fail
-                {
-                    _logger.LogInformation($"Skipping PR {pr.Number}");
-                    continue;
-                };
 
                 var files = await gitHubClient.PullRequest.Files(repositoryOwner, repositoryName, pr.Number);
-                if (files.Count > 100) // Skips big PRs as these will fail
+                if (files.Count > 100) // Skips big PRs as these will fail https://github.com/SSWConsulting/SSW.Rules/issues/1367
                 {
-                    _logger.LogInformation($"Skipping PR {pr.Number} (2nd check)");
+                    _logger.LogInformation($"Skipping PR {pr.Number} because there are too many files changed");
                     continue;
                 };
 
