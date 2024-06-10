@@ -36,6 +36,8 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
                 StartPage = 1
             };
 
+            _logger.LogInformation("Getting pull requests");
+
             var pullRequests =
                 await gitHubClient.PullRequest.GetAllForRepository(repositoryOwner, repositoryName, request,
                     apiOptions);
@@ -45,17 +47,24 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
                 throw new Exception("No Pull Requests found");
             }
 
+            _logger.LogInformation("Getting sync history hash");
             var syncHistoryHash = await context.SyncHistory.GetAll();
             var existingCommitHashes = new HashSet<string>(syncHistoryHash.Select(sh => sh.CommitHash));
             HttpClient httpClient = new HttpClient();
             var newRules = new List<LatestRules>();
             var updatedCount = 0;
 
+
             foreach (var pr in pullRequests)
             {
+                _logger.LogInformation($"Scanning PR {pr.Number}");
                 if (existingCommitHashes.Contains(pr.MergeCommitSha)) break;
                 if (!pr.Merged) continue;
-                if (pr.ChangedFiles > 100) continue; // Skips big PRs as these will fail
+                if (pr.ChangedFiles > 100) // Skips big PRs as these will fail
+                {
+                    _logger.LogInformation($"Skipping PR {pr.Number}");
+                    continue;
+                }; 
 
                 var files = await gitHubClient.PullRequest.Files(repositoryOwner, repositoryName, pr.Number);
                 foreach (var file in files)
