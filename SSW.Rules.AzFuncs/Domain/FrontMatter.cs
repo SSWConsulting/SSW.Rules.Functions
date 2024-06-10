@@ -7,6 +7,7 @@ public class FrontMatter
     public string Type { get; set; }
     
     [YamlMember(Alias = "archivedreason", ApplyNamingConventions = false)]
+    
     public string ArchivedReason { get; set; }
 
     public string Title { get; set; }
@@ -16,6 +17,10 @@ public class FrontMatter
     public List<Author> Authors { get; set; }
     public List<string> Related { get; set; }
     public List<string> Redirects { get; set; }
+
+    [YamlMember(Alias = "SeoDescription", ApplyNamingConventions = false)]
+    public string SeoDescription { get; set; }
+
 
     public FrontMatter()
     {
