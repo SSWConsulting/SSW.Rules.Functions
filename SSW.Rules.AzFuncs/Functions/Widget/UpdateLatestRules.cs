@@ -60,7 +60,7 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
                 _logger.LogInformation($"Scanning PR {pr.Number}");
                 if (existingCommitHashes.Contains(pr.MergeCommitSha)) break;
                 if (!pr.Merged) continue;
-                _logger.LogInformation($"PR {pr.Number} changed files {pr.ChangedFiles}");
+                _logger.LogInformation($"PR {pr.Number} - changed files {pr.ChangedFiles}");
                 _logger.LogInformation($"Too big? {pr.ChangedFiles > 100}");
                 if (pr.ChangedFiles > 100) // Skips big PRs as these will fail
                 {
