@@ -39,15 +39,23 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
             var pullRequests =
                 await gitHubClient.PullRequest.GetAllForRepository(repositoryOwner, repositoryName, request,
                     apiOptions);
-            var syncHistory = await context.SyncHistory.GetAll();
-            var existingCommitHashes = new HashSet<string>(syncHistory.Select(sh => sh.CommitHash));
+
+            if (pullRequests == null || !pullRequests.Any())
+            {
+                throw new Exception("No Pull Requests found");
+            }
+
+            var syncHistoryHash = await context.SyncHistory.GetAll();
+            var existingCommitHashes = new HashSet<string>(syncHistoryHash.Select(sh => sh.CommitHash));
             HttpClient httpClient = new HttpClient();
             var newRules = new List<LatestRules>();
             var updatedCount = 0;
+
             foreach (var pr in pullRequests)
             {
                 if (existingCommitHashes.Contains(pr.MergeCommitSha)) break;
                 if (!pr.Merged) continue;
+                if (pr.ChangedFiles > 100) continue; // Skips big PRs as these will fail
 
                 var files = await gitHubClient.PullRequest.Files(repositoryOwner, repositoryName, pr.Number);
                 foreach (var file in files)
@@ -91,7 +99,7 @@ public class UpdateLatestRules(ILoggerFactory loggerFactory, IGitHubClient gitHu
             _logger.LogInformation($"Updated Latest rules with {updatedCount} new entries.");
 
             return req.CreateJsonResponse(new
-                { message = $"Latest rules updated successfully with {updatedCount} new entries." });
+            { message = $"Latest rules updated successfully with {updatedCount} new entries." });
         }
         catch (Exception ex)
         {
