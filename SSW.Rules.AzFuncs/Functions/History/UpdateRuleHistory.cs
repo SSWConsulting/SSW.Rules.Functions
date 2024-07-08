@@ -39,6 +39,10 @@ public class UpdateRuleHistory(ILoggerFactory loggerFactory, RulesDbContext dbCo
                 var result = await dbContext.RuleHistoryCache.Query(q => q.Where(w => w.MarkdownFilePath == historyEntry.file));
                 var historyCache = result.FirstOrDefault();
 
+                _logger.LogInformation($"filename: {historyEntry.file}");
+                _logger.LogInformation($"Last updated: {historyEntry.lastUpdated}");
+                _logger.LogInformation($"Created: {historyEntry.created}");
+
                 if (historyCache == null)
                 {
                     await dbContext.RuleHistoryCache.Add(new RuleHistoryCache
@@ -57,9 +61,6 @@ public class UpdateRuleHistory(ILoggerFactory loggerFactory, RulesDbContext dbCo
                     historyCache.ChangedAtDateTime = DateTime.ParseExact(historyEntry.lastUpdated, DateFormat, _provider);
                     historyCache.ChangedByDisplayName = historyEntry.lastUpdatedBy;
                     historyCache.ChangedByEmail = historyEntry.lastUpdatedByEmail;
-                    historyCache.CreatedAtDateTime = DateTime.ParseExact(historyEntry.created, DateFormat, _provider);
-                    historyCache.CreatedByDisplayName = historyEntry.createdBy;
-                    historyCache.CreatedByEmail = historyEntry.createdByEmail;
                     await dbContext.RuleHistoryCache.Update(historyCache);
                 }
             }
