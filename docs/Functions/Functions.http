@@ -1,19 +1,20 @@
-@BaseApiUrl = http://localhost:7071/api
+@BaseApiUrl = http://localhost:7248/api
+@Token
+@RuleGuid
+@UserId
+@CommentsUserId
+@OrganisationId
 
 # Health
 GET {{BaseApiUrl}}/HealthCheckFunction
-Content-Type: application/json
 
 ###
 # History - Generate
 GET {{BaseApiUrl}}/GenerateHistoryFileFunction
-Content-Type: application/json
 
 ###
 # History - SyncCommitHash
 GET {{BaseApiUrl}}/GetHistorySyncCommitHash
-Content-Type: application/json
-
 
 ###
 # Widget - Get LatestRules (with GitHub)
@@ -22,17 +23,127 @@ Content-Type: application/json
 @githubUsername = "BrookJeynes"
 
 GET {{BaseApiUrl}}/GetLatestRules?skip={{skip}}&take={{take}}&githubUsername={{githubUsername}}
-Content-Type: application/json
+# Content-Type: application/json
 
 ###
 # Widget - Get LatestRules (No GitHub)
 
 GET {{BaseApiUrl}}/GetLatestRules?skip={{skip}}&take={{take}}
-Content-Type: application/json
-
 
 ###
-# Widget - Update LatestRules
-
-POST {{BaseApiUrl}}/UpdateLatestRules
+# Reactions - ReactFunction
+POST {{BaseApiUrl}}/ReactFunction
 Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+    "type": 3,
+    "ruleGuid": "{{RuleGuid}}",
+    "userId": "{{UserId}}"
+}
+
+###
+# Reactions - RemoveReactionFunction
+POST {{BaseApiUrl}}/RemoveReactionFunction
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+    "type": 3,
+    "ruleGuid": "{{RuleGuid}}",
+    "userId": "{{UserId}}"
+}
+
+###
+# Reactions - GetReactionsFunction
+GET {{BaseApiUrl}}/GetReactionsFunction?rule_guid={{RuleGuid}}&user_id={{UserId}}
+
+###
+# Reactions - GetAllReactionsFunction
+GET {{BaseApiUrl}}/GetAllReactionsFunction?user_id={{UserId}}
+
+###
+# CMSAuth - AuthenticateCms
+GET {{BaseApiUrl}}/auth?scope=public_repo
+
+###
+# CMSAuth - NetlifyCallback
+@code = 14bb17d5408e68e4b220
+GET {{BaseApiUrl}}/callback?code={{code}}
+
+###
+# Bookmark - BookmarkRuleFunction
+POST {{BaseApiUrl}}/BookmarkRuleFunction
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+    "RuleGuid": "{{RuleGuid}}",
+    "UserId": "{{UserId}}"
+}
+
+###
+# Bookmark - RemoveBookmarkFunction
+POST {{BaseApiUrl}}/RemoveBookmarkFunction
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+    "RuleGuid": "{{RuleGuid}}",
+    "UserId": "{{UserId}}"
+}
+
+###
+# Bookmark - GetAllBookmarkedFunction
+GET {{BaseApiUrl}}/GetAllBookmarkedFunction?user_id={{UserId}}
+
+###
+# Bookmark - GetBookmarkStatusFunction
+GET {{BaseApiUrl}}/GetBookmarkStatusFunction?rule_guid={{RuleGuid}}&user_id={{UserId}}
+
+###
+# SecretContent - GetSecretContentFunction
+GET {{BaseApiUrl}}/GetSecretContentFunction?id=cc4e043f-60e2-4f99-b9ee-b2518c3004a8
+Authorization: Bearer {{Token}}
+
+###
+# User - GetUserFunction
+GET {{BaseApiUrl}}/GetUserFunction?user_id={{UserId}}
+Authorization: Bearer {{Token}}
+
+###
+# User - GetOrganisationsFunction
+GET {{BaseApiUrl}}/GetOrganisationsFunction?user_id={{UserId}}
+Authorization: Bearer {{Token}}
+
+###
+# User - AddUserOrganisationFunction
+POST {{BaseApiUrl}}/AddUserOrganisationFunction
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+    "OrganisationId": "{{OrganisationId}}",
+    "UserId": "{{UserId}}"
+}
+
+###
+# User - RemoveUserCommentsAccountFunction
+POST {{BaseApiUrl}}/RemoveUserCommentsAccountFunction
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+    "UserId": "{{UserId}}"
+}
+
+###
+# User - ConnectUserToCommentsFunction
+POST {{BaseApiUrl}}/ConnectUserToCommentsFunction
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+    "UserId": "{{UserId}}",
+    "CommentsUserId": "{{CommentsUserId}}"
+}
