@@ -50,7 +50,7 @@ public class UpdateRuleHistory(ILoggerFactory loggerFactory, RulesDbContext dbCo
                         MarkdownFilePath = historyEntry.file,
                         Title = historyEntry.title,
                         Uri = historyEntry.uri,
-                        IsArchived = historyEntry.isArchived
+                        IsArchived = historyEntry.isArchived,
                         ChangedAtDateTime = DateTime.ParseExact(historyEntry.lastUpdated, DateFormat, _provider),
                         ChangedByDisplayName = historyEntry.lastUpdatedBy,
                         ChangedByEmail = historyEntry.lastUpdatedByEmail,
