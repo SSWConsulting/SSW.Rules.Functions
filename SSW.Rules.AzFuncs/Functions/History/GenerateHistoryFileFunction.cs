@@ -29,6 +29,9 @@ public class GenerateHistoryFileFunction(ILoggerFactory loggerFactory, RulesDbCo
         ruleHistory.AddRange(results.Select(history => new RuleHistoryData
         {
             file = history.MarkdownFilePath,
+            title = history.Title,
+            uri = history.Uri,
+            isArchived = history.IsArchived,
             lastUpdated = history.ChangedAtDateTime.ToString(DateFormat, CultureInfo.InvariantCulture),
             lastUpdatedBy = history.ChangedByDisplayName,
             lastUpdatedByEmail = history.ChangedByEmail,
