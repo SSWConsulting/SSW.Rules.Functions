@@ -48,6 +48,9 @@ public class UpdateRuleHistory(ILoggerFactory loggerFactory, RulesDbContext dbCo
                     await dbContext.RuleHistoryCache.Add(new RuleHistoryCache
                     {
                         MarkdownFilePath = historyEntry.file,
+                        Title = historyEntry.title,
+                        Uri = historyEntry.uri,
+                        IsArchived = historyEntry.isArchived,
                         ChangedAtDateTime = DateTime.ParseExact(historyEntry.lastUpdated, DateFormat, _provider),
                         ChangedByDisplayName = historyEntry.lastUpdatedBy,
                         ChangedByEmail = historyEntry.lastUpdatedByEmail,
@@ -58,6 +61,9 @@ public class UpdateRuleHistory(ILoggerFactory loggerFactory, RulesDbContext dbCo
                 }
                 else
                 {
+                    historyCache.Title = historyEntry.title;
+                    historyCache.Uri = historyEntry.uri;
+                    historyCache.IsArchived = historyEntry.isArchived;
                     historyCache.ChangedAtDateTime = DateTime.ParseExact(historyEntry.lastUpdated, DateFormat, _provider);
                     historyCache.ChangedByDisplayName = historyEntry.lastUpdatedBy;
                     historyCache.ChangedByEmail = historyEntry.lastUpdatedByEmail;
