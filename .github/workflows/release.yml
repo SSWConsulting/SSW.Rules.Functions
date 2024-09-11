@@ -32,7 +32,7 @@ jobs:
           --output ../deploy
 
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.2.1
+      uses: actions/upload-artifact@v4
       with:
         name: functionsapp
         path: deploy
