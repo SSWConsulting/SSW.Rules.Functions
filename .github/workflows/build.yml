@@ -37,6 +37,7 @@ jobs:
         with:
           name: functionsapp
           path: deploy
+          include-hidden-files: true
 
   validate-resources:
     runs-on: ubuntu-latest
