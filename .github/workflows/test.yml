@@ -26,9 +26,10 @@ jobs:
       - name: Deploy
         working-directory: SSW.Rules.AzFuncs/
         run: |
-          dotnet publish \
-            --configuration Release \
-            --output ../deploy
+          dotnet publish --configuration Release --output ../deploy
+      
+      - name: List Files After Publish
+        run: ls -R ../deploy
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
