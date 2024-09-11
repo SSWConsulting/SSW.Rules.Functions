@@ -1,0 +1,121 @@
+name: Test
+
+on:
+  push:
+    branches: [fix-functions]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET 8.0.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        working-directory: SSW.Rules.AzFuncs/
+        run: dotnet restore
+
+      - name: Build
+        working-directory: SSW.Rules.AzFuncs/
+        run: dotnet build --no-restore
+
+      - name: Deploy
+        working-directory: SSW.Rules.AzFuncs/
+        run: |
+          dotnet publish \
+            --configuration Release \
+            --output ../deploy
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: functionsapp
+          path: deploy
+
+  validate-resources:
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET 8.0.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Generate ARM Template
+        working-directory: Azure/
+        run: dotnet run
+        env:
+          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+          AUTH0_ISSUER: ${{ secrets.AUTH0_ISSUER }}
+          AZURE_RG_PREFIX: ${{ secrets.AZURE_RG_PREFIX }}
+          GITHUB_TOKEN: ${{ secrets.AZ_FUNC_GITHUB_PAT}}
+          CMS_OAUTH_CLIENT_ID: ${{ secrets.STAGING_CMS_OAUTH_CLIENT_ID }}
+          CMS_OAUTH_CLIENT_SECRET: ${{ secrets.STAGING_CMS_OAUTH_CLIENT_SECRET }}
+
+      - name: Login with Azure CLI
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Run ARM deploy
+        uses: azure/arm-deploy@v2
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: Azure/arm-template.json
+          deploymentMode: Validate
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: arm-template
+          path: Azure/arm-template.json
+
+  deploy:
+    needs: [build, validate-resources]
+    if: ${{ github.ref == 'refs/heads/fix-functions' }}
+    environment: staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: arm-template
+
+      - name: Login with Azure CLI
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Run ARM deploy
+        uses: azure/arm-deploy@v2
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: arm-template.json
+
+      - name: Setup .NET 8.0.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: functionsapp
+          path: deploy
+
+      - name: List contents of deploy folder
+        run: ls -la deploy
+
+      - name: "Run Azure Functions Action"
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          app-name: ${{ secrets.AZURE_RG_PREFIX }}-functions
+          package: deploy
