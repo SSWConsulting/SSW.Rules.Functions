@@ -29,6 +29,7 @@ jobs:
           dotnet publish --configuration Release --output ../deploy
       
       - name: List Files After Publish
+        working-directory: SSW.Rules.AzFuncs/
         run: ls -R ../deploy
 
       - name: Upload a Build Artifact
