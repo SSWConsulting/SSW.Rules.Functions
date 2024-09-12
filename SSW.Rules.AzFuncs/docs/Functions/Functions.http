@@ -17,20 +17,6 @@ GET {{BaseApiUrl}}/GenerateHistoryFileFunction
 GET {{BaseApiUrl}}/GetHistorySyncCommitHash
 
 ###
-# Widget - Get LatestRules (with GitHub)
-@skip = 0
-@take = 10
-@githubUsername = "BrookJeynes"
-
-GET {{BaseApiUrl}}/GetLatestRules?skip={{skip}}&take={{take}}&githubUsername={{githubUsername}}
-# Content-Type: application/json
-
-###
-# Widget - Get LatestRules (No GitHub)
-
-GET {{BaseApiUrl}}/GetLatestRules?skip={{skip}}&take={{take}}
-
-###
 # Reactions - ReactFunction
 POST {{BaseApiUrl}}/ReactFunction
 Content-Type: application/json
