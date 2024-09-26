@@ -13,4 +13,5 @@ public class LatestRules : BaseEntity
     public string CreatedBy { get; set; }
     public string UpdatedBy { get; set; }
     public string GitHubUsername { get; set; }
+    public string? ArchivedReason { get; set; }
 }
