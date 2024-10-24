@@ -17,38 +17,6 @@ GET {{BaseApiUrl}}/GenerateHistoryFileFunction
 GET {{BaseApiUrl}}/GetHistorySyncCommitHash
 
 ###
-# Reactions - ReactFunction
-POST {{BaseApiUrl}}/ReactFunction
-Content-Type: application/json
-Authorization: Bearer {{Token}}
-
-{
-    "type": 3,
-    "ruleGuid": "{{RuleGuid}}",
-    "userId": "{{UserId}}"
-}
-
-###
-# Reactions - RemoveReactionFunction
-POST {{BaseApiUrl}}/RemoveReactionFunction
-Content-Type: application/json
-Authorization: Bearer {{Token}}
-
-{
-    "type": 3,
-    "ruleGuid": "{{RuleGuid}}",
-    "userId": "{{UserId}}"
-}
-
-###
-# Reactions - GetReactionsFunction
-GET {{BaseApiUrl}}/GetReactionsFunction?rule_guid={{RuleGuid}}&user_id={{UserId}}
-
-###
-# Reactions - GetAllReactionsFunction
-GET {{BaseApiUrl}}/GetAllReactionsFunction?user_id={{UserId}}
-
-###
 # CMSAuth - AuthenticateCms
 GET {{BaseApiUrl}}/auth?scope=public_repo
 
@@ -111,25 +79,4 @@ Authorization: Bearer {{Token}}
 {
     "OrganisationId": "{{OrganisationId}}",
     "UserId": "{{UserId}}"
-}
-
-###
-# User - RemoveUserCommentsAccountFunction
-POST {{BaseApiUrl}}/RemoveUserCommentsAccountFunction
-Content-Type: application/json
-Authorization: Bearer {{Token}}
-
-{
-    "UserId": "{{UserId}}"
-}
-
-###
-# User - ConnectUserToCommentsFunction
-POST {{BaseApiUrl}}/ConnectUserToCommentsFunction
-Content-Type: application/json
-Authorization: Bearer {{Token}}
-
-{
-    "UserId": "{{UserId}}",
-    "CommentsUserId": "{{CommentsUserId}}"
 }
