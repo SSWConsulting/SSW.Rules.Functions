@@ -8,7 +8,8 @@ let mutable namePrefix = Environment.GetEnvironmentVariable "AZURE_RG_PREFIX"
 let gitHubToken = Environment.GetEnvironmentVariable "GITHUB_TOKEN" 
 let cmsOAuthClientId = Environment.GetEnvironmentVariable "CMS_OAUTH_CLIENT_ID"
 let cmsOAuthClientSecret = Environment.GetEnvironmentVariable "CMS_OAUTH_CLIENT_SECRET"
-
+let corsOrigins = Environment.GetEnvironmentVariable("CORS_ORIGINS")
+                    |> fun origins -> origins.Split(',') |> Array.toList
 
 if isNull namePrefix then
     namePrefix <- "sswrules-local"
@@ -36,6 +37,8 @@ let myFunctions = functions {
     setting "CosmosDb:Account" myCosmosDb.Endpoint
     setting "CosmosDb:Key" myCosmosDb.PrimaryKey
     setting "CosmosDb:DatabaseName" myCosmosDb.DbName
+
+    enable_cors corsOrigins
 }
 
 let deployment = arm {
