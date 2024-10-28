@@ -60,6 +60,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.AZ_FUNC_GITHUB_PAT}}
           CMS_OAUTH_CLIENT_ID: ${{ secrets.STAGING_CMS_OAUTH_CLIENT_ID }}
           CMS_OAUTH_CLIENT_SECRET: ${{ secrets.STAGING_CMS_OAUTH_CLIENT_SECRET }}
+          CORS_ORIGINS: ${{ secrets.STAGING_CORS_ORIGINS }}
 
       - name: Login with Azure CLI
         uses: azure/login@v2
