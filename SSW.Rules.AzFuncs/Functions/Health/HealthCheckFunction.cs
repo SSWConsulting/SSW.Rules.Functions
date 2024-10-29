@@ -1,5 +1,3 @@
-using System.Net;
-using AzureGems.CosmosDB;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -27,13 +25,6 @@ public class HealthCheckFunction(
         _logger.LogWarning($"HTTP trigger function {nameof(HealthCheckFunction)} received a request.");
 
         HealthCheckResult result = await apiAuthorization.HealthCheckAsync();
-        var reactionEntity = await dbContext.Reactions.Add(new Reaction
-        {
-            Type = ReactionType.Like,
-            RuleGuid = "exampleRule123",
-            UserId = "exampleUser123",
-            Discriminator = typeof(Reaction).FullName
-        });
 
         var bookmarkEntity = await dbContext.Bookmarks.Add(new Bookmark
         {
@@ -49,7 +40,7 @@ public class HealthCheckFunction(
             Discriminator = typeof(Domain.SecretContent).FullName
         });
 
-        if (result.IsHealthy && reactionEntity != null && bookmarkEntity != null && secretContentEntity != null)
+        if (result.IsHealthy && bookmarkEntity != null && secretContentEntity != null)
         {
             _logger.LogWarning($"{nameof(HealthCheckFunction)} health check OK.");
         }
