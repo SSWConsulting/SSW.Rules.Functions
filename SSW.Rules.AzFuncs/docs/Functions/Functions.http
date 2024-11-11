@@ -54,29 +54,3 @@ GET {{BaseApiUrl}}/GetAllBookmarkedFunction?user_id={{UserId}}
 ###
 # Bookmark - GetBookmarkStatusFunction
 GET {{BaseApiUrl}}/GetBookmarkStatusFunction?rule_guid={{RuleGuid}}&user_id={{UserId}}
-
-###
-# SecretContent - GetSecretContentFunction
-GET {{BaseApiUrl}}/GetSecretContentFunction?id=cc4e043f-60e2-4f99-b9ee-b2518c3004a8
-Authorization: Bearer {{Token}}
-
-###
-# User - GetUserFunction
-GET {{BaseApiUrl}}/GetUserFunction?user_id={{UserId}}
-Authorization: Bearer {{Token}}
-
-###
-# User - GetOrganisationsFunction
-GET {{BaseApiUrl}}/GetOrganisationsFunction?user_id={{UserId}}
-Authorization: Bearer {{Token}}
-
-###
-# User - AddUserOrganisationFunction
-POST {{BaseApiUrl}}/AddUserOrganisationFunction
-Content-Type: application/json
-Authorization: Bearer {{Token}}
-
-{
-    "OrganisationId": "{{OrganisationId}}",
-    "UserId": "{{UserId}}"
-}

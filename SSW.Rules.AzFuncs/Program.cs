@@ -8,7 +8,6 @@ using Octokit;
 using OidcApiAuthorization;
 using SSW.Rules.AzFuncs.Domain;
 using SSW.Rules.AzFuncs.Persistence;
-using User = SSW.Rules.AzFuncs.Domain.User;
 
 var configurationRoot = new ConfigurationBuilder()
     .SetBasePath(Environment.CurrentDirectory)
@@ -40,8 +39,6 @@ var host = new HostBuilder()
                 .WithContainerConfig(c =>
                 {
                     c.AddContainer<Bookmark>(containerId: nameof(Bookmark), partitionKeyPath: "/id");
-                    c.AddContainer<SecretContent>(containerId: nameof(SecretContent), partitionKeyPath: "/id");
-                    c.AddContainer<User>(containerId: nameof(User), partitionKeyPath: "/id");
                     c.AddContainer<SyncHistory>(containerId: nameof(SyncHistory), partitionKeyPath: "/id");
                     c.AddContainer<RuleHistoryCache>(containerId: nameof(RuleHistoryCache), partitionKeyPath: "/id");
                 });

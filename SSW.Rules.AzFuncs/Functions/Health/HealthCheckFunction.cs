@@ -33,14 +33,7 @@ public class HealthCheckFunction(
             Discriminator = typeof(Bookmark).FullName
         });
 
-        var secretContentEntity = await dbContext.SecretContents.Add(new Domain.SecretContent
-        {
-            OrganisationId = "123123",
-            Content = "Don't tell anyone about this",
-            Discriminator = typeof(Domain.SecretContent).FullName
-        });
-
-        if (result.IsHealthy && bookmarkEntity != null && secretContentEntity != null)
+        if (result.IsHealthy && bookmarkEntity != null)
         {
             _logger.LogWarning($"{nameof(HealthCheckFunction)} health check OK.");
         }
