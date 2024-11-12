@@ -1,9 +1,7 @@
 using System.Net;
-using AzureGems.CosmosDB;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using SSW.Rules.AzFuncs.Domain;
 using SSW.Rules.AzFuncs.helpers;
 using SSW.Rules.AzFuncs.Persistence;
 
@@ -42,25 +40,21 @@ public class GetBookmarkStatusFunction(ILoggerFactory loggerFactory, RulesDbCont
         }
 
         _logger.LogInformation("Checking for bookmark on rule: {0} and user: {1}", ruleGuid, userId);
-        var bookmarks =
-            await dbContext.Bookmarks.Query(q => q.Where(w => w.RuleGuid == ruleGuid && w.UserId == userId));
+        var bookmarks = await dbContext
+            .Bookmarks
+            .Query(q => q.Where(w => w.RuleGuid == ruleGuid && w.UserId == userId));
         
-        if (bookmarks.Any())
+        var bookmarkStatus = bookmarks.Any();
+        if (bookmarkStatus)
         {
-            return req.CreateJsonResponse(new
-            {
-                error = false,
-                message = "",
-                bookmarkStatus = true,
-            });
+            _logger.LogInformation($"Could not find results for rule id: {ruleGuid}, and user: {userId}");
         }
 
-        _logger.LogInformation($"Could not find results for rule id: {ruleGuid}, and user: {userId}");
         return req.CreateJsonResponse(new
         {
             error = false,
             message = "",
-            bookmarkStatus = false,
-        }, HttpStatusCode.NotFound);
+            bookmarkStatus,
+        });
     }
 }
