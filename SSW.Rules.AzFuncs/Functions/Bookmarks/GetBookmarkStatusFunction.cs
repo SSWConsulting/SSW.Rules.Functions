@@ -49,6 +49,10 @@ public class GetBookmarkStatusFunction(ILoggerFactory loggerFactory, RulesDbCont
         {
             _logger.LogInformation($"Could not find results for rule id: {ruleGuid}, and user: {userId}");
         }
+        else
+        {
+            _logger.LogInformation($"Could find results for rule id: {ruleGuid}, and user: {userId}");
+        }
 
         return req.CreateJsonResponse(new
         {
