@@ -45,7 +45,7 @@ public class GetBookmarkStatusFunction(ILoggerFactory loggerFactory, RulesDbCont
             .Query(q => q.Where(w => w.RuleGuid == ruleGuid && w.UserId == userId));
         
         var bookmarkStatus = bookmarks.Any();
-        if (bookmarkStatus)
+        if (!bookmarkStatus)
         {
             _logger.LogInformation($"Could not find results for rule id: {ruleGuid}, and user: {userId}");
         }
