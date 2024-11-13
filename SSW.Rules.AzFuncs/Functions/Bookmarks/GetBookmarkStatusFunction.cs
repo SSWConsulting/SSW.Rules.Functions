@@ -51,7 +51,7 @@ public class GetBookmarkStatusFunction(ILoggerFactory loggerFactory, RulesDbCont
         }
         else
         {
-            _logger.LogInformation($"Could find results for rule id: {ruleGuid}, and user: {userId}");
+            _logger.LogInformation($"✅ Found results for rule id: {ruleGuid}, and user: {userId}");
         }
 
         return req.CreateJsonResponse(new
