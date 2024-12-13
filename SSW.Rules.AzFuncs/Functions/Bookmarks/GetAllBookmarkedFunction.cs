@@ -17,15 +17,15 @@ public class GetAllBookmarkedFunction(
     [Function("GetAllBookmarkedFunction")]
     public async Task<HttpResponseData> Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
-        HttpRequestData req,
+        HttpRequestData request,
         FunctionContext executionContext)
     {
         _logger.LogWarning($"HTTP trigger function {nameof(GetAllBookmarkedFunction)} received a request.");
 
-        var userId = req.Query["user_id"];
+        var userId = request.Query["user_id"];
         if (string.IsNullOrEmpty(userId))
         {
-            return req.CreateJsonResponse(new
+            return request.CreateJsonResponse(new
             {
                 error = true,
                 message = "Missing or empty user_id param"
@@ -40,7 +40,7 @@ public class GetAllBookmarkedFunction(
         var bookmarksResult = bookmarks.ToList();
         if (bookmarksResult.Count != 0)
         {
-            return req.CreateJsonResponse(new
+            return request.CreateJsonResponse(new
             {
                 error = false,
                 message = "",
@@ -49,7 +49,7 @@ public class GetAllBookmarkedFunction(
         }
 
         _logger.LogInformation($"Could not find bookmarks for user: {userId}");
-        return req.CreateJsonResponse(new
+        return request.CreateJsonResponse(new
         {
             error = false,
             message = $"Could not find bookmarks for user: {userId}",
