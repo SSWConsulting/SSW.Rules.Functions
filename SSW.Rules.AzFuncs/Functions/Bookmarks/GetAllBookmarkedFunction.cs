@@ -1,5 +1,4 @@
 using System.Net;
-using AzureGems.CosmosDB;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -24,7 +23,6 @@ public class GetAllBookmarkedFunction(
         _logger.LogWarning($"HTTP trigger function {nameof(GetAllBookmarkedFunction)} received a request.");
 
         var userId = req.Query["user_id"];
-
         if (string.IsNullOrEmpty(userId))
         {
             return req.CreateJsonResponse(new
@@ -34,10 +32,11 @@ public class GetAllBookmarkedFunction(
             }, HttpStatusCode.BadRequest);
         }
 
-        _logger.LogInformation("Checking for bookmarks by user: {0}", userId);
-
-        var bookmarks = await dbContext.Bookmarks.Query<Bookmark>(q => q.Where(w => w.UserId == userId));
-
+        _logger.LogInformation($"Checking for bookmarks by user: {userId}");
+        
+        var bookmarks = await dbContext
+            .Bookmarks
+            .Query<Bookmark>(q => q.Where(w => w.UserId == userId));
         var bookmarksResult = bookmarks.ToList();
         if (bookmarksResult.Count != 0)
         {
@@ -49,12 +48,12 @@ public class GetAllBookmarkedFunction(
             });
         }
 
-        _logger.LogInformation($"Could not find results for user: {userId}");
+        _logger.LogInformation($"Could not find bookmarks for user: {userId}");
         return req.CreateJsonResponse(new
         {
-            error = true,
-            message = $"Could not find results for user: {userId}",
+            error = false,
+            message = $"Could not find bookmarks for user: {userId}",
             bookmarkedRules = bookmarksResult
-        }, HttpStatusCode.NotFound);
+        }, HttpStatusCode.OK);
     }
 }
