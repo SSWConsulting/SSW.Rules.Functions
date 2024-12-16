@@ -56,6 +56,6 @@ public class RemoveBookmarkFunction(
 
         await dbContext.Bookmarks.Delete(existingBookmark);
         _logger.LogInformation("User: {0}, Rule: {1}, Id: {2}", existingBookmark.UserId, existingBookmark.RuleGuid, existingBookmark.Id);
-        return request.CreateResponse(HttpStatusCode.NoContent);
+        return request.CreateJsonResponse(HttpStatusCode.NoContent);
     }
 }
