@@ -32,7 +32,7 @@ public class GetAllBookmarkedFunction(
             }, HttpStatusCode.BadRequest);
         }
 
-        _logger.LogInformation($"Checking for bookmarks by user: {userId}");
+        _logger.LogInformation("Checking for bookmarks by user: {0}", userId);
         
         var bookmarks = await dbContext
             .Bookmarks
@@ -48,7 +48,7 @@ public class GetAllBookmarkedFunction(
             });
         }
 
-        _logger.LogInformation($"Could not find bookmarks for user: {userId}");
+        _logger.LogInformation("Could not find bookmarks for user: {0}", userId);
         return request.CreateJsonResponse(new
         {
             error = false,

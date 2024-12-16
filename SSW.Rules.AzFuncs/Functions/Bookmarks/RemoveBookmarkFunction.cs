@@ -29,7 +29,7 @@ public class RemoveBookmarkFunction(
             _logger.LogWarning(authorizationResult.FailureReason);
             return request.CreateJsonErrorResponse(HttpStatusCode.Unauthorized);
         }
-        _logger.LogWarning($"HTTP trigger function {nameof(RemoveBookmarkFunction)} request is authorized.");
+        _logger.LogWarning("HTTP trigger function {0} request is authorized.", nameof(RemoveBookmarkFunction));
 
         var requestBody = await new StreamReader(request.Body).ReadToEndAsync();
         var data = JsonConvert.DeserializeObject<Bookmark>(requestBody);
@@ -44,7 +44,7 @@ public class RemoveBookmarkFunction(
         var existingBookmark = results.FirstOrDefault();
         if (existingBookmark is null)
         {
-            _logger.LogInformation($"No bookmark exists for User {data.UserId} and Rule {data.RuleGuid}");
+            _logger.LogInformation("No bookmark exists for User {0} and Rule {1}", data.UserId, data.RuleGuid);
             return request.CreateJsonResponse(new
             {
                 error = true,
@@ -55,7 +55,7 @@ public class RemoveBookmarkFunction(
         }
 
         await dbContext.Bookmarks.Delete(existingBookmark);
-        _logger.LogInformation($"User: {existingBookmark.UserId}, Rule: {existingBookmark.RuleGuid}, Id: {existingBookmark.Id}");
+        _logger.LogInformation("User: {0}, Rule: {1}, Id: {2}", existingBookmark.UserId, existingBookmark.RuleGuid, existingBookmark.Id);
         return request.CreateResponse(HttpStatusCode.NoContent);
     }
 }

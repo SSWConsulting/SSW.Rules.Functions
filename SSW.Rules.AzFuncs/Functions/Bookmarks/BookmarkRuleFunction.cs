@@ -29,7 +29,7 @@ public class BookmarkRuleFunction(
             _logger.LogWarning(authorizationResult.FailureReason);
             return request.CreateJsonErrorResponse(HttpStatusCode.Unauthorized);
         }
-        _logger.LogWarning($"HTTP trigger function {nameof(BookmarkRuleFunction)} request is authorized.");
+        _logger.LogWarning("HTTP trigger function {0} request is authorized.", nameof(BookmarkRuleFunction));
 
         var requestBody = await new StreamReader(request.Body).ReadToEndAsync();
         var data = JsonConvert.DeserializeObject<Bookmark>(requestBody);
@@ -48,12 +48,12 @@ public class BookmarkRuleFunction(
         if (existingBookmark is null)
         {
             result = await dbContext.Bookmarks.Add(data);
-            _logger.LogInformation($"User: {result.UserId} bookmarked this rule: {result.Id} successfully");
+            _logger.LogInformation("User: {0} bookmarked this rule: {1} successfully", result.UserId, result.Id);
             return request.CreateJsonResponse(result, HttpStatusCode.Created);
         }
         else
         {
-            _logger.LogInformation($"Bookmark already exists for user {existingBookmark.UserId}");
+            _logger.LogInformation("Bookmark already exists for user {0}", existingBookmark.UserId);
             return request.CreateJsonErrorResponse(HttpStatusCode.BadRequest, "This rule has already been bookmarked");
         }
     }
