@@ -19,6 +19,7 @@ namespace OidcApiAuthorization;
 
         private readonly string _issuerUrl = null;
         private readonly string _audience = null;
+        private readonly string _apiAudience = null;
 
         public OidcApiAuthorizationService(
             IOptions<OidcApiAuthorizationSettings> apiAuthorizationSettingsOptions,
@@ -28,6 +29,7 @@ namespace OidcApiAuthorization;
         {
             _issuerUrl = apiAuthorizationSettingsOptions?.Value?.IssuerUrl;
             _audience = apiAuthorizationSettingsOptions?.Value?.Audience;
+            _apiAudience = apiAuthorizationSettingsOptions?.Value?.ApiAudience;
 
             _authorizationHeaderBearerTokenExractor = authorizationHeaderBearerTokenExractor;
 
@@ -86,7 +88,7 @@ namespace OidcApiAuthorization;
                     var tokenValidationParameters = new TokenValidationParameters
                     {
                         RequireSignedTokens = true,
-                        ValidAudience = _audience,
+                        ValidAudiences = new List<string> { _audience, _apiAudience },
                         ValidateAudience = true,
                         ValidIssuer = _issuerUrl,
                         ValidateIssuer = true,
