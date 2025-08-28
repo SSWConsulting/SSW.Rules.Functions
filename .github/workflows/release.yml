@@ -55,6 +55,7 @@ jobs:
       run: dotnet run
       env:
           AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+          AUTH0_APIAUDIENCE: ${{ secrets.AUTH0_APIAUDIENCE }}
           AUTH0_ISSUER: ${{ secrets.AUTH0_ISSUER }}
           AZURE_RG_PREFIX: ${{ secrets.AZURE_RG_PREFIX }}
           GITHUB_TOKEN: ${{ secrets.AZ_FUNC_GITHUB_PAT}}
