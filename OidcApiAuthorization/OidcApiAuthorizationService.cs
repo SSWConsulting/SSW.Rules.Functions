@@ -89,7 +89,7 @@ namespace OidcApiAuthorization;
                     {
                         RequireSignedTokens = true,
                         ValidAudiences = new List<string> { _audience, _apiAudience },
-                        ValidateAudience = true,
+                        ValidateAudience = false,
                         ValidIssuer = _issuerUrl,
                         ValidateIssuer = true,
                         ValidateIssuerSigningKey = true,
