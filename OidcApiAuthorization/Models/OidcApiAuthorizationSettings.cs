@@ -21,6 +21,8 @@ public class OidcApiAuthorizationSettings
     /// </remarks>
     public string Audience { get; set; }
 
+    public string ApiAudience { get; set; }
+
     /// <summary>
     /// The URL of the Open ID Connect provider (issuer) that will perform API authorization.
     /// </summary>

@@ -3,6 +3,7 @@ open Farmer
 open Farmer.Builders
 
 let audience = Environment.GetEnvironmentVariable  "AUTH0_AUDIENCE"
+let apiAudience = Environment.GetEnvironmentVariable "AUTH0_APIAUDIENCE"
 let issuer = Environment.GetEnvironmentVariable  "AUTH0_ISSUER"
 let mutable namePrefix = Environment.GetEnvironmentVariable "AZURE_RG_PREFIX"
 let gitHubToken = Environment.GetEnvironmentVariable "GITHUB_TOKEN" 
@@ -33,6 +34,7 @@ let myFunctions = functions {
     setting "CMS_OAUTH_CLIENT_ID" cmsOAuthClientId
     setting "CMS_OAUTH_CLIENT_SECRET" cmsOAuthClientSecret
     setting "OidcApiAuthorizationSettings:Audience" audience
+    setting "OidcApiAuthorizationSettings:ApiAudience" apiAudience
     setting "OidcApiAuthorizationSettings:IssuerUrl" issuer
     setting "CosmosDb:Account" myCosmosDb.Endpoint
     setting "CosmosDb:Key" myCosmosDb.PrimaryKey
